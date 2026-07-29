@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>バーテックスドライブ|時間の美術館 — VERTEX DRIVE</title>
+<meta name="description" content="バーテックスドライブは、時間を一台ずつ仕立てるコーチビルド工房です。継承・手仕事・経年——三つの時間の常設展。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect fill='%231C1B18' width='64' height='64'/%3E%3Ctext x='32' y='44' font-family='Baskerville,serif' font-size='36' fill='%23F2EFE9' text-anchor='middle'%3EV%3C/text%3E%3C/svg%3E">
+<style>
+  /* ============================================================
+     時間の美術館 / A Museum of Hours — VERTEX DRIVE
+     palette: 胡粉 #F2EFE9 / 墨 #1C1B18 / 銀鼠 #A9A49B / 緑青 #6F8073 / 溜 #5A3A31
+     ============================================================ */
+  :root {
+    --gofun: #F2EFE9;   /* 背景・余白 */
+    --sumi:  #1C1B18;   /* 見出し・本文・闇 */
+    --ginnezu: #A9A49B; /* 罫線・キャプション */
+    --rokusho: #6F8073; /* 唯一の彩度:ホバー・進行表示のみ */
+    --tame: #5A3A31;    /* リンク下線・引用頭文字のみ */
+    --serif-jp: "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Yu Mincho", "Noto Serif JP", serif;
+    --latin: Baskerville, "Baskerville Old Face", "Times New Roman", serif;
+    --sans-jp: "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-padding-top: 96px; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+  body {
+    background: var(--gofun);
+    color: var(--sumi);
+    font-family: var(--serif-jp);
+    font-weight: 300;
+    font-size: 15px;
+    line-height: 2.2;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: var(--sumi); color: var(--gofun); }
+
+  a { color: inherit; text-decoration: none; }
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible {
+    outline: 1px solid var(--rokusho); outline-offset: 4px;
+  }
+
+  .lat { font-family: var(--latin); font-variant-numeric: oldstyle-nums; }
+  .smcp { font-family: var(--latin); font-variant: small-caps; letter-spacing: 0.3em; text-transform: lowercase; }
+
+  /* ---------------- header ---------------- */
+  .site-head {
+    position: fixed; inset: 0 0 auto 0; z-index: 20;
+    display: flex; align-items: baseline; justify-content: space-between;
+    padding: 26px 5vw 18px;
+    color: var(--gofun);
+    transition: background-color 0.8s ease, color 0.8s ease, border-color 0.8s ease;
+    border-bottom: 1px solid transparent;
+  }
+  body.past-hero .site-head {
+    background: var(--gofun); color: var(--sumi);
+    border-bottom-color: var(--ginnezu);
+  }
+  .brand { display: flex; align-items: baseline; gap: 1em; }
+  .brand .en { font-family: var(--latin); font-variant: small-caps; text-transform: lowercase; font-size: 17px; letter-spacing: 0.3em; }
+  .brand .jp { font-size: 10.5px; font-family: var(--sans-jp); letter-spacing: 0.34em; opacity: 0.66; }
+  .site-nav { display: flex; gap: 2.2em; font-family: var(--sans-jp); font-size: 11px; letter-spacing: 0.22em; }
+  .site-nav a { opacity: 0.82; transition: color 0.4s ease, opacity 0.4s ease; }
+  .site-nav a:hover { color: var(--rokusho); opacity: 1; }
+  @media (max-width: 960px) { .site-nav a:not(.nav-keep) { display: none; } .brand .jp { display: none; } }
+
+  /* ---------------- progress rail(緑青の唯一の常在) ---------------- */
+  .progress-rail {
+    position: fixed; left: max(20px, 2.2vw); top: 27vh; height: 46vh; width: 1px;
+    background: color-mix(in srgb, var(--ginnezu) 45%, transparent);
+    z-index: 15;
+  }
+  .progress-rail span { display: block; width: 1px; height: 0%; background: var(--rokusho); }
+  @media (max-width: 960px) { .progress-rail { display: none; } }
+
+  /* ---------------- hero:開館前の展示室 ---------------- */
+  .hero {
+    position: relative; height: 100vh; height: 100svh; min-height: 560px;
+    background: var(--sumi); color: var(--gofun); overflow: hidden;
+  }
+  .hero-media, .hero canvas {
+    position: absolute; inset: 0; width: 100%; height: 100%; display: block; object-fit: cover;
+  }
+  .hero-inner {
+    position: absolute; inset: auto 0 16vh 0;
+    display: flex; flex-direction: column; align-items: center; text-align: center;
+    padding: 0 6vw; gap: 20px;
+  }
+  .hero-eyebrow { font-size: 11px; letter-spacing: 0.3em; opacity: 0.62; display: flex; align-items: baseline; gap: 1.2em; }
+  .hero-eyebrow .jp { font-family: var(--sans-jp); font-size: 10px; letter-spacing: 0.4em; }
+  .hero h1 {
+    font-size: clamp(24px, 3.6vw, 44px); font-weight: 300;
+    letter-spacing: 0.18em; text-indent: 0.18em; line-height: 2;
+    text-wrap: balance;
+  }
+  .hero-sub { font-size: 13px; letter-spacing: 0.24em; opacity: 0.55; }
+  .scroll-cue {
+    position: absolute; left: 50%; bottom: 0; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 12px; padding-bottom: 26px;
+  }
+  .cue-label { font-family: var(--sans-jp); font-size: 10px; letter-spacing: 0.4em; text-indent: 0.4em; opacity: 0.5; }
+  .cue-line { width: 1px; height: 52px; background: var(--ginnezu); opacity: 0.7; }
+  @media (prefers-reduced-motion: no-preference) {
+    .cue-line { animation: cue-breathe 4s ease-in-out infinite; }
+    @keyframes cue-breathe { 0%, 100% { opacity: 0.7; } 50% { opacity: 0.25; } }
+  }
+
+  /* ▼ 本番動画への差し替え手順は、この下の hero セクション内コメントと hero-video-prompt.md を参照 */
+
+  /* ---------------- rooms(展示室)共通 ---------------- */
+  .room { padding: 150px 6vw; max-width: 1160px; margin: 0 auto; }
+  .room + .room { border-top: 1px solid color-mix(in srgb, var(--ginnezu) 50%, transparent); }
+  .room-head { display: flex; align-items: baseline; gap: 1.6em; margin-bottom: 64px; }
+  .room-no { font-family: var(--latin); font-size: 13px; letter-spacing: 0.14em; color: var(--ginnezu); }
+  .room-en { font-family: var(--latin); font-variant: small-caps; text-transform: lowercase; font-size: 12px; letter-spacing: 0.3em; color: var(--ginnezu); }
+  .room-head::after { content: ""; flex: 1; height: 1px; background: color-mix(in srgb, var(--ginnezu) 50%, transparent); align-self: center; }
+  .room h2 { font-size: clamp(21px, 2.6vw, 32px); font-weight: 300; letter-spacing: 0.2em; line-height: 2; margin-bottom: 40px; text-wrap: balance; }
+  .room .body { max-width: 36em; }
+  .room .body p + p { margin-top: 2em; }
+  .caption { font-family: var(--sans-jp); font-size: 11px; letter-spacing: 0.18em; color: var(--ginnezu); line-height: 2; }
+
+  /* 超低速の入場フェード */
+  /* 隠すのはJSが動く時だけ。スクリプトが無い環境では最初から読める状態を既定とする */
+  .js .reveal { opacity: 0; transform: translateY(14px); transition: opacity 1.1s cubic-bezier(0.22, 1, 0.36, 1), transform 1.1s cubic-bezier(0.22, 1, 0.36, 1); }
+  .js .reveal.visible { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) { .js .reveal { opacity: 1; transform: none; transition: none; } }
+
+  /* ---------------- 01 序 PREFACE ---------------- */
+  /* 縦書きの見出しは右に置く(縦組みは右から読み始める) */
+  .preface-grid { display: flex; flex-direction: row-reverse; justify-content: flex-end; gap: clamp(56px, 9vw, 140px); align-items: flex-start; }
+  .preface-grid .body { flex: 0 1 36em; }
+  .tategaki {
+    writing-mode: vertical-rl; font-size: clamp(22px, 2.4vw, 30px);
+    letter-spacing: 0.32em; line-height: 2.6; height: 9.4em;
+    font-weight: 300; flex-shrink: 0;
+  }
+  @media (max-width: 760px) { .preface-grid { flex-direction: column; } .tategaki { height: 8em; align-self: flex-end; } }
+
+  /* ---------------- ROOM 01 継承:年表 ---------------- */
+  .timeline { max-width: 44em; margin-top: 8px; }
+  .timeline-row { display: grid; grid-template-columns: 7em 1fr; gap: 2em; padding: 22px 0; border-top: 1px solid color-mix(in srgb, var(--ginnezu) 50%, transparent); }
+  .timeline-row:last-child { border-bottom: 1px solid color-mix(in srgb, var(--ginnezu) 50%, transparent); }
+  .timeline-row .year { font-family: var(--latin); font-size: 17px; letter-spacing: 0.1em; color: var(--sumi); }
+  .timeline-row .event { font-size: 14px; line-height: 2.1; }
+  .closing-line { margin-top: 56px; font-size: 16px; letter-spacing: 0.2em; }
+
+  /* ---------------- ROOM 02 手 ---------------- */
+  .hand-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(32px, 4vw, 64px); }
+  .hand-item { border-top: 1px solid var(--sumi); padding-top: 26px; }
+  .hand-item h3 { font-size: 14.5px; font-weight: 300; letter-spacing: 0.14em; margin-bottom: 18px; line-height: 2; }
+  .hand-item h3 .num { font-family: var(--latin); font-size: 15px; }
+  .hand-item p { font-size: 13.5px; line-height: 2.2; }
+  @media (max-width: 860px) { .hand-grid { grid-template-columns: 1fr; } }
+
+  /* ---------------- interlude(引用) ---------------- */
+  .interlude {
+    max-width: 1160px; margin: 0 auto; padding: 140px 6vw; text-align: center;
+    border-top: 1px solid color-mix(in srgb, var(--ginnezu) 50%, transparent);
+  }
+  .interlude p { font-size: clamp(18px, 2.2vw, 26px); letter-spacing: 0.22em; text-indent: 0.22em; line-height: 2.4; text-wrap: balance; }
+  .q-init { color: var(--tame); }
+
+  /* ---------------- ROOM 03 三つの時刻 ---------------- */
+  .models { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(36px, 4vw, 72px); }
+  @media (max-width: 960px) { .models { grid-template-columns: 1fr; gap: 88px; } }
+  /* 三枚のキャプションプレートとして、開閉トリガーの罫線を横一線に揃える */
+  .model { display: flex; flex-direction: column; }
+  .model p.desc { flex: 1; }
+  .model .plate { width: 100%; height: auto; display: block; margin-bottom: 26px; }
+  .plate path, .plate circle, .plate line { fill: none; stroke: var(--sumi); stroke-width: 1.1; }
+  .plate .ground { stroke: var(--ginnezu); stroke-width: 0.75; }
+  .plate .hub { stroke-width: 0.75; }
+  .model-name { display: flex; align-items: baseline; gap: 0.9em; margin-bottom: 4px; }
+  .model-name .jp { font-size: 21px; letter-spacing: 0.24em; font-weight: 300; }
+  .model-name .en { font-family: var(--latin); font-variant: small-caps; text-transform: lowercase; font-size: 12px; letter-spacing: 0.28em; color: var(--ginnezu); }
+  .model-tagline { font-size: 13px; letter-spacing: 0.12em; color: var(--ginnezu); margin-bottom: 20px; }
+  .model p.desc { font-size: 13.5px; line-height: 2.25; margin-bottom: 28px; }
+  .model details { border-top: 1px solid color-mix(in srgb, var(--ginnezu) 60%, transparent); }
+  .model summary {
+    list-style: none; cursor: pointer; padding: 14px 0;
+    font-family: var(--sans-jp); font-size: 11px; letter-spacing: 0.3em; color: var(--ginnezu);
+    transition: color 0.4s ease;
+  }
+  .model summary::-webkit-details-marker { display: none; }
+  .model summary:hover { color: var(--rokusho); }
+  .model summary .close-label { display: none; }
+  .model details[open] summary .open-label { display: none; }
+  .model details[open] summary .close-label { display: inline; }
+  .spec-list { padding: 6px 0 18px; }
+  .spec-row { display: grid; grid-template-columns: 8em 1fr; gap: 1.5em; padding: 10px 0; border-top: 1px solid color-mix(in srgb, var(--ginnezu) 35%, transparent); }
+  .spec-row dt { font-family: var(--sans-jp); font-size: 11px; letter-spacing: 0.16em; color: var(--ginnezu); }
+  .spec-row dd { font-size: 13px; letter-spacing: 0.06em; }
+  .spec-row dd .lat { font-size: 14px; }
+  .models-note { margin-top: 72px; }
+
+  /* ---------------- ROOM 04 経年 PATINA ---------------- */
+  .patina-points { max-width: 46em; margin-top: 56px; }
+  .patina-point { display: grid; grid-template-columns: 7em 1fr; gap: 2em; padding: 22px 0; border-top: 1px solid color-mix(in srgb, var(--ginnezu) 50%, transparent); }
+  .patina-point:last-child { border-bottom: 1px solid color-mix(in srgb, var(--ginnezu) 50%, transparent); }
+  .patina-point .label { font-family: var(--sans-jp); font-size: 11px; letter-spacing: 0.2em; color: var(--ginnezu); line-height: 2.7; }
+  .patina-point p { font-size: 14px; line-height: 2.1; }
+
+  /* ---------------- 収蔵のご案内 COMMISSION ---------------- */
+  .commission-grid { display: flex; gap: clamp(48px, 8vw, 120px); align-items: flex-start; }
+  .commission-grid .body { flex: 1.2; }
+  .commission-form { flex: 1; min-width: 300px; }
+  @media (max-width: 860px) { .commission-grid { flex-direction: column; } .commission-form { width: 100%; } }
+  .field { margin-bottom: 34px; }
+  .field label { display: block; font-family: var(--sans-jp); font-size: 11px; letter-spacing: 0.24em; color: var(--ginnezu); margin-bottom: 6px; }
+  .field input, .field textarea {
+    width: 100%; border: 0; border-bottom: 1px solid var(--ginnezu); background: transparent;
+    font-family: var(--serif-jp); font-size: 15px; line-height: 2; padding: 6px 0; color: var(--sumi);
+    border-radius: 0; resize: none;
+  }
+  .field input:focus, .field textarea:focus { outline: none; border-bottom-color: var(--rokusho); }
+  .form-actions { display: flex; align-items: center; gap: 2.4em; margin-top: 44px; flex-wrap: wrap; }
+  .btn {
+    display: inline-block; border: 1px solid var(--sumi); background: transparent; cursor: pointer;
+    font-family: var(--serif-jp); font-weight: 300; font-size: 13px; letter-spacing: 0.32em; text-indent: 0.32em;
+    padding: 16px 44px; color: var(--sumi);
+    transition: color 0.4s ease, border-color 0.4s ease;
+  }
+  .btn:hover { color: var(--rokusho); border-color: var(--rokusho); }
+  .link-quiet { font-family: var(--sans-jp); font-size: 11.5px; letter-spacing: 0.2em; border-bottom: 1px solid var(--tame); padding-bottom: 3px; transition: color 0.4s ease; }
+  .link-quiet:hover { color: var(--rokusho); }
+  .form-done { display: none; font-size: 14px; letter-spacing: 0.1em; line-height: 2.2; padding: 24px 0; }
+  .commission-form.sent form { display: none; }
+  .commission-form.sent .form-done { display: block; }
+
+  /* ---------------- 来館案内 VISIT / footer ---------------- */
+  .visit .body { font-size: 13.5px; }
+  .visit .tel { border-bottom: 1px solid var(--tame); padding-bottom: 2px; }
+  .visit .tel:hover { color: var(--rokusho); }
+  .visit .tel .lat { font-size: 14.5px; letter-spacing: 0.08em; }
+
+  .site-foot { border-top: 1px solid var(--ginnezu); padding: 110px 6vw 90px; text-align: center; }
+  .site-foot .mark { font-family: var(--latin); font-variant: small-caps; text-transform: lowercase; font-size: 15px; letter-spacing: 0.34em; }
+  .site-foot .mark-jp { font-family: var(--sans-jp); font-size: 10px; letter-spacing: 0.4em; color: var(--ginnezu); margin-top: 10px; }
+  .site-foot .rule { width: 56px; height: 1px; background: var(--ginnezu); margin: 44px auto; }
+  .site-foot .tagline { font-size: 13.5px; letter-spacing: 0.2em; }
+  .site-foot .note { margin-top: 36px; font-family: var(--sans-jp); font-size: 10.5px; letter-spacing: 0.1em; color: var(--ginnezu); line-height: 2.4; }
+</style>
+</head>
+<body>
+<script>document.documentElement.classList.add('js');</script>
+
+<header class="site-head">
+  <a class="brand" href="#top">
+    <span class="en">Vertex Drive</span>
+    <span class="jp">バーテックスドライブ</span>
+  </a>
+  <nav class="site-nav" aria-label="展示案内">
+    <a href="#preface">序</a>
+    <a href="#inheritance">継承</a>
+    <a href="#hand">手</a>
+    <a href="#hours">三つの時刻</a>
+    <a href="#patina">経年</a>
+    <a class="nav-keep" href="#commission">収蔵のご案内</a>
+    <a class="nav-keep" href="#visit">来館案内</a>
+  </nav>
+</header>
+
+<div class="progress-rail" aria-hidden="true"><span id="progressFill"></span></div>
+
+<main id="top">
+
+  <!-- ======================================================
+       00 開館|HERO — 開館前の展示室(CGプレースホルダー)
+       ▼ 本番動画への差し替え手順
+       1) hero-video-prompt.md のプロンプトで動画を生成し、
+          assets/hero.mp4(H.264)と assets/hero.webm、
+          ポスター画像 assets/hero-poster.webp を保存する
+       2) 下の <canvas> 行を削除し、直後のコメント内 <video> を有効化する
+       ====================================================== -->
+  <section class="hero" id="hero" aria-label="時間は、最も美しい素材である。">
+    <canvas id="heroCanvas" aria-hidden="true"></canvas>
+    <!--
+    <video class="hero-media" autoplay muted loop playsinline poster="assets/hero-poster.webp" aria-hidden="true">
+      <source src="assets/hero.webm" type="video/webm" />
+      <source src="assets/hero.mp4" type="video/mp4" />
+    </video>
+    -->
+    <div class="hero-inner">
+      <p class="hero-eyebrow"><span class="smcp">A Museum of Hours</span><span class="jp">常設展</span></p>
+      <h1>時間は、最も美しい素材である。</h1>
+      <p class="hero-sub lat">Time is our material.</p>
+    </div>
+    <a class="scroll-cue" href="#preface">
+      <span class="cue-label">展示室へ</span>
+      <span class="cue-line" aria-hidden="true"></span>
+    </a>
+  </section>
+
+  <!-- 01 序|PREFACE -->
+  <section class="room" id="preface">
+    <header class="room-head reveal">
+      <span class="room-no">01</span>
+      <span class="room-en">Preface</span>
+    </header>
+    <div class="preface-grid">
+      <h2 class="tategaki reveal">ここは、工場ではありません。</h2>
+      <div class="body reveal">
+        <p>ここは、工場ではありません。時間を、一台ずつ仕立てる場所です。私たちは新しさを誇りません。一九六七年に生まれ、一台きりで終わった図面を、現代の冶金と手仕事で正確に、しかし新しく仕立て直す。その繰り返しだけで、この工房は成り立っています。</p>
+        <p>新車の匂いは、三ヶ月で消えます。私たちが作っているのは、そのあとの三十年です。速さは、いつか古びる。美しさは、古び方を知っている。──この一行を確かめるために、どうぞ、展示室をゆっくりとお進みください。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 第一室|ROOM 01 — INHERITANCE 継承 -->
+  <section class="room" id="inheritance">
+    <header class="room-head reveal">
+      <span class="room-no">Room 01</span>
+      <span class="room-en">Inheritance</span>
+    </header>
+    <h2 class="reveal">継承</h2>
+    <div class="body reveal">
+      <p>私たちの出発点は、一九六七年に一台きりで終わった、あるクーペの図面です。設計者の名は、もう本のなかにしかありません。けれど線は、紙の上で生きていました。</p>
+    </div>
+    <div class="timeline reveal">
+      <div class="timeline-row"><span class="year">1967</span><span class="event">一台のクーペが試作される。量産は見送られ、図面と木型だけが蔵に残る。</span></div>
+      <div class="timeline-row"><span class="year">2009</span><span class="event">解体予定の蔵から、図面一式と木型が見つかる。</span></div>
+      <div class="timeline-row"><span class="year">2014</span><span class="event">バーテックスドライブ設立。三年をかけて素材と工法を検証する。</span></div>
+      <div class="timeline-row"><span class="year">2018</span><span class="event">常磐 一号車、納車。以後、すべての車両に通し番号の台帳が付く。</span></div>
+      <div class="timeline-row"><span class="year">2026</span><span class="event">三つの時刻が揃い、常設展として公開される。</span></div>
+    </div>
+    <p class="closing-line reveal">変わらないために、すべてを作り直す。それが、私たちの言う「継承」です。</p>
+  </section>
+
+  <!-- 03 第二室|ROOM 02 — THE HAND 手 -->
+  <section class="room" id="hand">
+    <header class="room-head reveal">
+      <span class="room-no">Room 02</span>
+      <span class="room-en">The Hand</span>
+    </header>
+    <h2 class="reveal"><span class="lat">1,100</span>時間、十九層、一人の目。</h2>
+    <div class="hand-grid">
+      <div class="hand-item reveal">
+        <h3>ボディ成形 ── 約<span class="num">1,100</span>時間</h3>
+        <p>手叩きのアルミニウムを、木型に一枚ずつ寄り添わせます。槌の音が止むまで、およそ千百時間。図面に描けない曲面が、ここで決まります。</p>
+      </div>
+      <div class="hand-item reveal">
+        <h3>塗りと研ぎ ── 十九層</h3>
+        <p>塗って、研いで、また塗る。十九層目に、ようやく「黒」と呼べる色になります。急がせる理由を、私たちはひとつも持っていません。</p>
+      </div>
+      <div class="hand-item reveal">
+        <h3>革の裁断 ── 一人の職人</h3>
+        <p>革の裁断は、いまも一人の職人の目に委ねています。機械は迷いません。しかし、選びもしないからです。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 引用 -->
+  <aside class="interlude">
+    <p class="reveal"><span class="q-init">速</span>さは、いつか古びる。<br>美しさは、古び方を知っている。</p>
+  </aside>
+
+  <!-- 04 第三室|ROOM 03 — THREE HOURS 三つの時刻 -->
+  <section class="room" id="hours">
+    <header class="room-head reveal">
+      <span class="room-no">Room 03</span>
+      <span class="room-en">Three Hours</span>
+    </header>
+    <h2 class="reveal">三つの時刻</h2>
+    <div class="body reveal" style="margin-bottom: 88px;">
+      <p>永遠、夜明け、日暮れ。私たちの三台は、速さではなく時刻で名付けられています。</p>
+    </div>
+    <div class="models">
+
+      <article class="model reveal">
+        <svg class="plate" data-model="tokiwa" viewBox="0 0 1000 330" role="img" aria-label="常磐 TOKIWA 側面線図"></svg>
+        <div class="model-name"><span class="jp">常磐</span><span class="en">Tokiwa</span></div>
+        <p class="model-tagline">永遠という時刻の、グランドツアラー。</p>
+        <p class="desc">一九六七年、一度だけ試作された幻のクーペ。その図面を、現代の冶金と手仕事で正確に、しかし新しく仕立て直しました。変わらないために、すべてを作り直す──常磐とは、そういう名前です。長い直線の果てで、自然吸気の六気筒が低く声を整える。千キロ先の街まで、時間は乱れません。</p>
+        <details>
+          <summary><span class="open-label">仕様を読む</span><span class="close-label">仕様を閉じる</span></summary>
+          <dl class="spec-list">
+            <div class="spec-row"><dt>機関</dt><dd><span class="lat">3.8 ℓ</span> 直列六気筒・自然吸気</dd></div>
+            <div class="spec-row"><dt>年間製作</dt><dd><span class="lat">6</span> 台</dd></div>
+            <div class="spec-row"><dt>価格</dt><dd><span class="lat">5,800</span>万円より(応相談)</dd></div>
+          </dl>
+        </details>
+      </article>
+
+      <article class="model reveal">
+        <svg class="plate" data-model="akatsuki" viewBox="0 0 1000 330" role="img" aria-label="暁 AKATSUKI 側面線図"></svg>
+        <div class="model-name"><span class="jp">暁</span><span class="en">Akatsuki</span></div>
+        <p class="model-tagline">夜明けという時刻の、バルケッタ。</p>
+        <p class="desc">屋根を持たない、最も軽い一台。夜明けの空気を、素材のひとつとして設計しました。針の計器と、六気筒の呼吸。電子の表示は、ひとつもありません。速度ではなく、時刻を味わうためのロードスターです。</p>
+        <details>
+          <summary><span class="open-label">仕様を読む</span><span class="close-label">仕様を閉じる</span></summary>
+          <dl class="spec-list">
+            <div class="spec-row"><dt>車両重量</dt><dd><span class="lat">940</span> kg</dd></div>
+            <div class="spec-row"><dt>年間製作</dt><dd><span class="lat">4</span> 台</dd></div>
+            <div class="spec-row"><dt>価格</dt><dd><span class="lat">4,600</span>万円より(応相談)</dd></div>
+          </dl>
+        </details>
+      </article>
+
+      <article class="model reveal">
+        <svg class="plate" data-model="yoi" viewBox="0 0 1000 330" role="img" aria-label="宵 YOI 側面線図"></svg>
+        <div class="model-name"><span class="jp">宵</span><span class="en">Yoi</span></div>
+        <p class="model-tagline">日暮れという時刻の、グランドクーペ。</p>
+        <p class="desc">一日の終わりに似合う、静かなファストバック。音を削ぎ、光を落とし、残るものだけを残しました。街の灯がボディの上を流れてゆく、その時間のために。工数の半分は、遮音と間接光に費やされています。</p>
+        <details>
+          <summary><span class="open-label">仕様を読む</span><span class="close-label">仕様を閉じる</span></summary>
+          <dl class="spec-list">
+            <div class="spec-row"><dt>遮音・内装工数</dt><dd>全工程の <span class="lat">1/2</span></dd></div>
+            <div class="spec-row"><dt>年間製作</dt><dd><span class="lat">2</span> 台</dd></div>
+            <div class="spec-row"><dt>価格</dt><dd><span class="lat">6,400</span>万円より(応相談)</dd></div>
+          </dl>
+        </details>
+      </article>
+
+    </div>
+    <p class="caption models-note reveal">図は一分の一設計図より再作図した側面線図。実車は、来館のうえご覧いただけます。</p>
+  </section>
+
+  <!-- 05 第四室|ROOM 04 — PATINA 経年 -->
+  <section class="room" id="patina">
+    <header class="room-head reveal">
+      <span class="room-no">Room 04</span>
+      <span class="room-en">Patina</span>
+    </header>
+    <h2 class="reveal">走行距離計は、あなたの伝記の頁数になる。</h2>
+    <div class="body reveal">
+      <p>納車の日がいちばん美しい車を、私たちは作っていません。十年を経た同じ個体が、隣に並ぶ新しい一台より深い艶をまとう──それが、この工房の完成予想図です。革は手の形を覚え、アルミは光の角度を覚える。所有とは、時間に署名を重ねてゆくことだと考えています。</p>
+    </div>
+    <div class="patina-points reveal">
+      <div class="patina-point"><span class="label">納車</span><p>アトリエの展示室にて。カバーを外す最初の一枚は、あなたの手に委ねます。</p></div>
+      <div class="patina-point"><span class="label">担当</span><p>一台につき一人。仕立てのすべてを知る担当者が、生涯にわたり伴走します。</p></div>
+      <div class="patina-point"><span class="label">帰館整備</span><p>年に一度。摩耗は直し、経年は残す──その区別を、私たちは間違えません。</p></div>
+      <div class="patina-point"><span class="label">台帳</span><p>板金から塗りまでの全記録を一冊に綴じ、車両とともにお渡しします。</p></div>
+    </div>
+  </section>
+
+  <!-- 06 収蔵のご案内|COMMISSION -->
+  <section class="room" id="commission">
+    <header class="room-head reveal">
+      <span class="room-no">06</span>
+      <span class="room-en">Commission</span>
+    </header>
+    <h2 class="reveal">収蔵のご案内 ── 年に、十二台。</h2>
+    <div class="commission-grid">
+      <div class="body reveal">
+        <p>価格表は、ございません。すべては面談から始まります。あなたの時間の使い方をうかがい、一台の姿を決めてゆく──納車までの十四ヶ月を、私たちは「お待たせする時間」とは考えていません。あなたの一台が生まれてゆく時間として、工程のすべてをお見せします。</p>
+        <p>お名前、ご連絡先、そしてひとこと。うかがうのは、その三つだけです。</p>
+      </div>
+      <div class="commission-form reveal">
+        <form id="commissionForm" novalidate>
+          <div class="field">
+            <label for="f-name">お名前</label>
+            <input id="f-name" name="name" type="text" autocomplete="name">
+          </div>
+          <div class="field">
+            <label for="f-contact">ご連絡先</label>
+            <input id="f-contact" name="contact" type="text" autocomplete="email">
+          </div>
+          <div class="field">
+            <label for="f-word">ひとこと</label>
+            <textarea id="f-word" name="word" rows="2"></textarea>
+          </div>
+          <div class="form-actions">
+            <button class="btn" type="submit">対話をはじめる</button>
+            <a class="link-quiet" href="#visit">来館の予約</a>
+          </div>
+        </form>
+        <p class="form-done">ありがとうございます。担当の者より、二営業日以内にご連絡を差し上げます。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 来館案内|VISIT -->
+  <section class="room visit" id="visit">
+    <header class="room-head reveal">
+      <span class="room-no">07</span>
+      <span class="room-en">Visit</span>
+    </header>
+    <h2 class="reveal">来館案内</h2>
+    <div class="body reveal">
+      <p>バーテックスドライブ 軽井沢アトリエ<br>長野県北佐久郡軽井沢町発地<br><a class="tel" href="tel:0267451967">電話 <span class="lat">0267-45-1967</span></a></p>
+      <p class="caption">来館は面談の後、予約制にて承ります。地図は、面談の際にお渡しします。</p>
+    </div>
+  </section>
+
+</main>
+
+<!-- 08 結び|FOOTER(奥付) -->
+<footer class="site-foot">
+  <p class="mark">Vertex Drive</p>
+  <p class="mark-jp">バーテックスドライブ</p>
+  <div class="rule" aria-hidden="true"></div>
+  <p class="tagline">時間は、最も美しい素材である。 ── <span class="lat">Time is our material.</span></p>
+  <p class="note">© <span class="lat" id="year">2026</span> VERTEX DRIVE. 本頁の記載内容の無断転載を禁じます。</p>
+</footer>
+
+<script>
+/* ==========================================================
+   00 HERO — 「開館前の展示室」canvas CG
+   墨色の闇 / 天窓からの一筋の斜光(90秒で左→右) /
+   光の帯の中の塵 / 稜線のヘアライン・ハイライト /
+   磨き布のように曲線上を滑る光の帯
+   ========================================================== */
+(() => {
+  const canvas = document.getElementById('heroCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W = 0, H = 0;
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = canvas.clientWidth; H = canvas.clientHeight;
+    canvas.width = W * dpr; canvas.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (reduced) drawFrame(0.60, 0);
+  }
+  window.addEventListener('resize', resize);
+
+  // ---- 稜線(ルーフライン/フェンダー):三次ベジェの制御点(車ボックス正規化座標) ----
+  const upperLine = [
+    [[0.985, 0.62], [0.90, 0.44], [0.80, 0.315], [0.665, 0.30]],
+    [[0.665, 0.30], [0.565, 0.29], [0.52, 0.36], [0.455, 0.475]],
+    [[0.455, 0.475], [0.33, 0.52], [0.17, 0.545], [0.075, 0.60]],
+    [[0.075, 0.60], [0.028, 0.63], [0.012, 0.68], [0.02, 0.76]],
+  ];
+  const beltLine = [
+    [[0.97, 0.80], [0.965, 0.68], [0.93, 0.615], [0.865, 0.60]],
+    [[0.865, 0.60], [0.77, 0.585], [0.70, 0.62], [0.60, 0.635]],
+    [[0.60, 0.635], [0.46, 0.655], [0.38, 0.63], [0.295, 0.625]],
+    [[0.295, 0.625], [0.20, 0.62], [0.10, 0.66], [0.045, 0.72]],
+  ];
+  function sampleCubic(seg, t) {
+    const [p0, c1, c2, p1] = seg, u = 1 - t;
+    return [
+      u*u*u*p0[0] + 3*u*u*t*c1[0] + 3*u*t*t*c2[0] + t*t*t*p1[0],
+      u*u*u*p0[1] + 3*u*u*t*c1[1] + 3*u*t*t*c2[1] + t*t*t*p1[1],
+    ];
+  }
+  function flatten(curves, per = 30) {
+    const pts = [];
+    for (const seg of curves) for (let i = 0; i <= per; i++) pts.push(sampleCubic(seg, i / per));
+    return pts;
+  }
+  const upperPts = flatten(upperLine);
+  const beltPts = flatten(beltLine);
+
+  const dust = Array.from({ length: 64 }, () => ({
+    x: Math.random(), y: Math.random(),
+    r: 0.4 + Math.random() * 1.0,
+    vy: -(0.003 + Math.random() * 0.009),
+    ph: Math.random() * Math.PI * 2,
+  }));
+
+  // 粒状感(バンディング防止の微細グレイン)
+  const grain = document.createElement('canvas');
+  grain.width = grain.height = 140;
+  const gctx = grain.getContext('2d');
+  const gimg = gctx.createImageData(140, 140);
+  for (let i = 0; i < gimg.data.length; i += 4) {
+    const v = 110 + Math.random() * 145 | 0;
+    gimg.data[i] = gimg.data[i+1] = gimg.data[i+2] = v;
+    gimg.data[i+3] = 10;
+  }
+  gctx.putImageData(gimg, 0, 0);
+
+  const GOFUN = (a) => `rgba(242, 239, 233, ${a})`;
+  const CYCLE = 90;          // 太陽の軌跡:90秒
+  const TILT = 0.30;         // 斜光の傾き(x/y)
+
+  function carBox() {
+    const cw = Math.min(W * 0.68, 1080);
+    const ch = cw * 0.30;
+    return { cx: W * 0.58 - cw * 0.5, cy: H * 0.50 - ch * 0.5, cw, ch };
+  }
+
+  function drawLitPath(pts, box, lightXAt, baseA, glowA, wBase, wGlow, polish) {
+    const { cx, cy, cw, ch } = box;
+    const n = pts.length;
+    for (let i = 0; i < n - 1; i++) {
+      const x1 = cx + pts[i][0] * cw, y1 = cy + pts[i][1] * ch;
+      const x2 = cx + pts[i+1][0] * cw, y2 = cy + pts[i+1][1] * ch;
+      const midX = (x1 + x2) / 2, midY = (y1 + y2) / 2;
+      const d = Math.abs(midX - lightXAt(midY)) / (box.cw * 0.38);
+      let lit = Math.max(0, 1 - d * d);
+      // 磨き布:曲線パラメータ上を一度だけ滑る加算ハイライト
+      let pol = 0;
+      if (polish >= 0) {
+        const s = i / (n - 1);
+        const ds = (s - polish) / 0.055;
+        pol = Math.exp(-ds * ds);
+      }
+      const a = baseA + glowA * lit;
+      if (a > 0.008) {
+        ctx.strokeStyle = GOFUN(a);
+        ctx.lineWidth = wBase + wGlow * lit;
+        ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+      }
+      if (pol > 0.02) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'lighter';
+        ctx.strokeStyle = GOFUN(0.5 * pol);
+        ctx.lineWidth = 1.4;
+        ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+        ctx.restore();
+      }
+    }
+  }
+
+  function drawFrame(p, t) {
+    // p: 0..1 周期位置 / t: 経過秒
+    ctx.clearRect(0, 0, W, H);
+
+    // 墨色の闇(純黒にしない)
+    const bg = ctx.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0, '#201f1b');
+    bg.addColorStop(0.6, '#1C1B18');
+    bg.addColorStop(1, '#171613');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    const box = carBox();
+    const groundY = box.cy + box.ch * 1.04;
+
+    // 斜光:床面到達点が左→右へ。端で明滅(日の出・日没)
+    const env = Math.sin(Math.PI * p);                     // 明るさ包絡
+    const floorX = W * (-0.12 + 1.24 * p);
+    const bladeXAt = (y) => floorX - (H - y) * TILT;       // 高さyでの光帯中心
+    const bladeW = Math.max(90, W * 0.085);
+
+    // 光の帯(回転させた線形グラデーション)
+    ctx.save();
+    const topX = bladeXAt(0);
+    const ang = Math.atan2(H, floorX - topX);
+    ctx.translate(topX, 0);
+    ctx.rotate(ang - Math.PI / 2);   // 床の到達点が右下になるよう傾ける
+    const bl = ctx.createLinearGradient(-bladeW, 0, bladeW, 0);
+    bl.addColorStop(0, GOFUN(0));
+    bl.addColorStop(0.42, GOFUN(0.028 * env));
+    bl.addColorStop(0.5, GOFUN(0.055 * env));
+    bl.addColorStop(0.58, GOFUN(0.028 * env));
+    bl.addColorStop(1, GOFUN(0));
+    ctx.fillStyle = bl;
+    ctx.fillRect(-bladeW, -H * 0.2, bladeW * 2, H * 1.8);
+    ctx.restore();
+
+    // 床の光だまり
+    const pool = ctx.createRadialGradient(floorX, groundY, 0, floorX, groundY, box.cw * 0.5);
+    pool.addColorStop(0, GOFUN(0.05 * env));
+    pool.addColorStop(1, GOFUN(0));
+    ctx.save();
+    ctx.scale(1, 0.20);
+    ctx.translate(0, groundY / 0.20 - groundY);
+    ctx.fillStyle = pool;
+    ctx.fillRect(floorX - box.cw * 0.55, groundY - box.cw * 0.55, box.cw * 1.1, box.cw * 1.1);
+    ctx.restore();
+
+    // 床の稜(展示台の縁)
+    const gl = ctx.createLinearGradient(box.cx - box.cw * 0.12, 0, box.cx + box.cw * 1.12, 0);
+    gl.addColorStop(0, GOFUN(0));
+    gl.addColorStop(0.5, GOFUN(0.09 * (0.4 + 0.6 * env)));
+    gl.addColorStop(1, GOFUN(0));
+    ctx.strokeStyle = gl;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(box.cx - box.cw * 0.12, groundY);
+    ctx.lineTo(box.cx + box.cw * 1.12, groundY);
+    ctx.stroke();
+
+    // 磨き布の位置:周期の 35%〜58% の間に一度だけ曲線上を滑る
+    let polish = -1;
+    if (!reduced && p > 0.35 && p < 0.58) {
+      const s = (p - 0.35) / 0.23;
+      polish = 1 - (s * s * (3 - 2 * s));   // smoothstep(進行方向:後端→ノーズ)
+    }
+
+    // 稜線ハイライト(髪の毛ほどの細さ。全体像は見せない)
+    ctx.lineCap = 'round';
+    drawLitPath(upperPts, box, bladeXAt, 0.030 * env, 0.72 * env, 0.7, 1.2, polish);
+    drawLitPath(beltPts, box, bladeXAt, 0.020 * env, 0.46 * env, 0.55, 0.95, -1);
+
+    // 塵:光の帯の中でのみ浮遊・明滅
+    for (const d of dust) {
+      if (!reduced) {
+        d.y += d.vy / 60;
+        if (d.y < -0.02) { d.y = 1.02; d.x = Math.random(); }
+      }
+      const px = d.x * W, py = d.y * H;
+      const dist = Math.abs(px - bladeXAt(py)) / (bladeW * 1.3);
+      const vis = Math.max(0, 1 - dist);
+      if (vis <= 0.03) continue;
+      const tw = 0.5 + 0.5 * Math.sin(t * 1.4 + d.ph);
+      ctx.fillStyle = GOFUN(0.15 * vis * tw * env);
+      ctx.beginPath();
+      ctx.arc(px, py, d.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // 最深部の霧に、ごく僅かな緑青
+    const fog = ctx.createRadialGradient(W * 0.15, H * 0.9, 0, W * 0.15, H * 0.9, W * 0.6);
+    fog.addColorStop(0, 'rgba(111, 128, 115, 0.022)');
+    fog.addColorStop(1, 'rgba(111, 128, 115, 0)');
+    ctx.fillStyle = fog;
+    ctx.fillRect(0, 0, W, H);
+
+    // 周辺減光
+    const vg = ctx.createRadialGradient(W/2, H*0.5, Math.min(W,H)*0.38, W/2, H*0.5, Math.max(W,H)*0.9);
+    vg.addColorStop(0, 'rgba(0,0,0,0)');
+    vg.addColorStop(1, 'rgba(10,10,8,0.5)');
+    ctx.fillStyle = vg;
+    ctx.fillRect(0, 0, W, H);
+
+    // グレイン
+    const pat = ctx.createPattern(grain, 'repeat');
+    ctx.save();
+    ctx.globalAlpha = 0.45;
+    ctx.translate(-((t * 60) % 140 | 0) * 0.31, -((t * 47) % 140 | 0) * 0.53);
+    ctx.fillStyle = pat;
+    ctx.fillRect(0, 0, W + 140, H + 140);
+    ctx.restore();
+  }
+
+  resize();
+  if (reduced) {
+    drawFrame(0.60, 0);
+  } else {
+    let start = null, frameCount = 0;
+    function loop(now) {
+      if (start === null) start = now;
+      frameCount++;
+      if (frameCount % 2 === 0) {          // 30fpsで十分な静けさ
+        const t = (now - start) / 1000;
+        drawFrame(((t + CYCLE * 0.60) % CYCLE) / CYCLE, t);
+      }
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  }
+})();
+
+/* ==========================================================
+   側面線図(第三室の展示プレート)— SVGを制御点から生成
+   ========================================================== */
+(() => {
+  const NOSE = [[0.075, 0.60], [0.028, 0.63], [0.012, 0.68], [0.02, 0.755]];
+  const BELT = [
+    [[0.97, 0.80], [0.965, 0.68], [0.93, 0.615], [0.865, 0.60]],
+    [[0.865, 0.60], [0.77, 0.585], [0.70, 0.62], [0.60, 0.635]],
+    [[0.60, 0.635], [0.46, 0.655], [0.38, 0.63], [0.295, 0.625]],
+    [[0.295, 0.625], [0.20, 0.62], [0.10, 0.66], [0.045, 0.72]],
+  ];
+  const FRONT_LOWER = [[[0.045, 0.72], [0.048, 0.79], [0.075, 0.845], [0.16, 0.85]]];
+  const REAR_LOWER  = [[[0.97, 0.80], [0.955, 0.835], [0.92, 0.85], [0.845, 0.85]]];
+  const SILL        = [[[0.315, 0.85], [0.42, 0.85], [0.60, 0.85], [0.715, 0.85]]];
+
+  const MODELS = {
+    tokiwa: {
+      strokes: [
+        [ // 上稜線:テール→ルーフ→ノーズ
+          [[0.985, 0.62], [0.90, 0.44], [0.80, 0.315], [0.665, 0.30]],
+          [[0.665, 0.30], [0.565, 0.29], [0.52, 0.36], [0.455, 0.475]],
+          [[0.455, 0.475], [0.33, 0.52], [0.17, 0.545], [0.075, 0.60]],
+          NOSE,
+        ],
+        BELT, FRONT_LOWER, REAR_LOWER, SILL,
+      ],
+    },
+    akatsuki: {
+      strokes: [
+        [ // ノーズ→フード→低い風防
+          [[0.02, 0.75], [0.008, 0.67], [0.03, 0.615], [0.095, 0.585]],
+          [[0.095, 0.585], [0.21, 0.55], [0.34, 0.53], [0.445, 0.525]],
+          [[0.445, 0.525], [0.455, 0.478], [0.462, 0.458], [0.488, 0.448]],
+        ],
+        [ // コクピット後端→リアデッキ→テール
+          [[0.565, 0.505], [0.68, 0.492], [0.82, 0.522], [0.955, 0.578]],
+          [[0.955, 0.578], [0.982, 0.60], [0.985, 0.655], [0.965, 0.72]],
+        ],
+        BELT, FRONT_LOWER, REAR_LOWER, SILL,
+      ],
+    },
+    yoi: {
+      strokes: [
+        [ // より低く、後方に引いたルーフ
+          [[0.985, 0.615], [0.925, 0.44], [0.845, 0.335], [0.71, 0.315]],
+          [[0.71, 0.315], [0.60, 0.30], [0.55, 0.35], [0.48, 0.46]],
+          [[0.48, 0.46], [0.34, 0.515], [0.17, 0.54], [0.075, 0.60]],
+          NOSE,
+        ],
+        BELT, FRONT_LOWER, REAR_LOWER, SILL,
+      ],
+    },
+  };
+
+  const SX = 1000, SY = 300, GROUND = 296, WHEEL_R = 52;
+  const XY = (p) => `${(p[0] * SX).toFixed(1)} ${(p[1] * SY).toFixed(1)}`;
+  const NS = 'http://www.w3.org/2000/svg';
+
+  function pathFrom(segs) {
+    let d = `M ${XY(segs[0][0])}`;
+    for (const [, c1, c2, p1] of segs) d += ` C ${XY(c1)}, ${XY(c2)}, ${XY(p1)}`;
+    return d;
+  }
+
+  document.querySelectorAll('.plate').forEach((svg) => {
+    const model = MODELS[svg.dataset.model];
+    if (!model) return;
+
+    const ground = document.createElementNS(NS, 'line');
+    ground.setAttribute('x1', 10); ground.setAttribute('x2', SX - 10);
+    ground.setAttribute('y1', GROUND); ground.setAttribute('y2', GROUND);
+    ground.setAttribute('class', 'ground');
+    svg.appendChild(ground);
+
+    const drawn = [];
+    for (const segs of model.strokes) {
+      const path = document.createElementNS(NS, 'path');
+      path.setAttribute('d', pathFrom(segs));
+      svg.appendChild(path);
+      drawn.push(path);
+    }
+    for (const cx of [255, 775]) {
+      const wheel = document.createElementNS(NS, 'circle');
+      wheel.setAttribute('cx', cx); wheel.setAttribute('cy', GROUND - WHEEL_R);
+      wheel.setAttribute('r', WHEEL_R);
+      svg.appendChild(wheel);
+      drawn.push(wheel);
+      const hub = document.createElementNS(NS, 'circle');
+      hub.setAttribute('cx', cx); hub.setAttribute('cy', GROUND - WHEEL_R);
+      hub.setAttribute('r', 14);
+      hub.setAttribute('class', 'hub');
+      svg.appendChild(hub);
+      drawn.push(hub);
+    }
+
+    // 図面が引かれてゆく描画アニメーション(reveal時)
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      drawn.forEach((el, i) => {
+        const len = el.getTotalLength();
+        el.style.strokeDasharray = len;
+        el.style.strokeDashoffset = len;
+        el.style.transition = `stroke-dashoffset 2.2s cubic-bezier(0.22, 1, 0.36, 1) ${0.15 + i * 0.18}s`;
+      });
+      svg.dataset.pending = '1';
+    }
+  });
+
+  window.__playPlate = (svg) => {
+    if (svg.dataset.pending !== '1') return;
+    delete svg.dataset.pending;
+    svg.querySelectorAll('path, circle').forEach((el) => { el.style.strokeDashoffset = 0; });
+  };
+})();
+
+/* ==========================================================
+   入場フェード / ヘッダー反転 / 進行表示 / フォーム
+   ========================================================== */
+(() => {
+  // 入場フェードは位置計算で判定する。監視APIの発火に依存させない
+  // ——取りこぼすとページ全体が見えなくなるため
+  let pending = [...document.querySelectorAll('.reveal')];
+  const hero = document.getElementById('hero');
+  const fill = document.getElementById('progressFill');
+
+  function update() {
+    const vh = window.innerHeight;
+    pending = pending.filter((el) => {
+      const r = el.getBoundingClientRect();
+      if (r.top > vh * 0.92 || r.bottom < 0) return true;
+      el.classList.add('visible');
+      el.querySelectorAll('.plate').forEach((s) => window.__playPlate && window.__playPlate(s));
+      return false;
+    });
+
+    document.body.classList.toggle('past-hero', hero.getBoundingClientRect().bottom <= 72);
+
+    const max = document.documentElement.scrollHeight - vh;
+    fill.style.height = `${max > 0 ? Math.min(100, (window.scrollY / max) * 100) : 0}%`;
+  }
+
+  // rAFで間引かない。描画が止まっている環境では本文が出ないままになるため
+  // (計測対象は表示済みのぶんだけ pending から外れて減っていく)
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  window.addEventListener('load', update);
+  update();
+
+  // フォーム:デモ挙動(送信先は未接続。バックエンド接続時に置き換えてください)
+  const form = document.getElementById('commissionForm');
+  form.addEventListener('submit', (ev) => {
+    ev.preventDefault();
+    form.closest('.commission-form').classList.add('sent');
+  });
+
+  const y = document.getElementById('year');
+  if (y) y.textContent = new Date().getFullYear();
+})();
+</script>
+</body>
+</html>

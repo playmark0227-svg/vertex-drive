@@ -1,0 +1,1783 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>バーテックスドライブ ジャパン|公式ウェブサイト</title>
+<meta name="description" content="バーテックスドライブ公式ウェブサイト。三つの時刻 ─ 常磐・暁・宵。時間を仕立てるコーチビルド工房。">
+<meta name="theme-color" content="#010205">
+<meta name="color-scheme" content="dark light">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="VERTEX DRIVE">
+<meta property="og:title" content="バーテックスドライブ ジャパン|公式ウェブサイト">
+<meta property="og:description" content="三つの時刻 ─ 常磐・暁・宵。時間を仕立てるコーチビルド工房。">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect fill='%23010205' width='64' height='64'/%3E%3Ctext x='32' y='44' font-family='Helvetica,Arial' font-size='34' font-weight='700' fill='%23fff' text-anchor='middle'%3EV%3C/text%3E%3C/svg%3E">
+<script>document.documentElement.classList.add('js');</script>
+<style>
+  /* ============================================================
+     VERTEX DRIVE — 公式ウェブサイト(refined)
+     構成はドイツ製スポーツカー公式サイトの骨格を踏襲。
+     媒体はすべて canvas CG。動きの原則:
+     「transform と opacity 以外は動かさない」「バウンス禁止」
+     「速く出発し、長く減速する」
+     ============================================================ */
+  :root {
+    --ink: #010205;
+    --dark: #0e0e12;
+    --paper: #ffffff;
+    --mist: #efeff0;
+    --line: #d8d8db;
+    --sans: "Helvetica Neue", Helvetica, Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", sans-serif;
+    --script: "Snell Roundhand", "Savoye LET", cursive;
+    --radius: 12px;
+
+    /* モーショントークン */
+    --dur-micro: 150ms;
+    --dur-small: 280ms;
+    --dur-med: 520ms;
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+    --ease-exit: cubic-bezier(0.55, 0, 1, 0.45);
+    --ease-panel: cubic-bezier(0.32, 0.72, 0, 1);
+    --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+    --stagger-card: 90ms;
+    --rise: 22px;
+    --rise-sm: 12px;
+
+    /* ガラス */
+    --glass-fill: rgba(22, 23, 28, 0.40);
+    --glass-fill-hover: rgba(40, 41, 47, 0.55);
+    --glass-edge: rgba(255, 255, 255, 0.14);
+    --glass-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.14);
+    --glass-blur: blur(18px) saturate(160%) brightness(1.05);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :root { --dur-small: 1ms; --dur-med: 1ms; --dur-large: 1ms; --rise: 0px; --rise-sm: 0px; }
+  }
+
+  /* すりガラスが効かない環境では、地の透過だけでは文字が読めない。塗りを濃くして補う */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    :root {
+      --glass-fill: rgba(18, 19, 24, 0.80);
+      --glass-fill-hover: rgba(38, 39, 45, 0.90);
+    }
+    .site-head { background: linear-gradient(to bottom, rgba(1,2,5,0.86), rgba(1,2,5,0.66)); }
+    body.scrolled .site-head { background: rgba(1,2,5,0.94); }
+    .hero-copy .cta { background: rgba(38, 38, 44, 0.86); }
+    .drawer-backdrop { background: rgba(1, 2, 5, 0.62); }
+    .card.light-media .card-arrow { background: rgba(255, 255, 255, 0.9); }
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-padding-top: 72px; -webkit-tap-highlight-color: transparent; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+
+  body {
+    font-family: var(--sans);
+    color: var(--ink);
+    background: var(--paper);
+    font-size: 15px;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection { background: #17181d; color: #fff; }
+  .hero ::selection, .range ::selection, .site-foot ::selection { background: #e9e9ee; color: #0e0e12; }
+
+  /* 視覚的にのみ隠す(支援技術には残す) */
+  .vh {
+    position: absolute; width: 1px; height: 1px;
+    overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+  }
+  .skip-link {
+    position: fixed; top: 8px; left: 8px; z-index: 60;
+    padding: 12px 20px; border-radius: 8px;
+    background: #fff; color: #010205; font-size: 14px; font-weight: 600;
+    transform: translateY(-160%);
+    transition: transform var(--dur-small) var(--ease-out);
+  }
+  .skip-link:focus-visible { transform: none; outline: 2px solid #010205; outline-offset: 2px; }
+
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-thumb { background: rgba(1,2,5,0.25); border-radius: 999px; border: 3px solid transparent; background-clip: content-box; }
+  ::-webkit-scrollbar-thumb:hover { background-color: rgba(1,2,5,0.45); }
+
+  a { color: inherit; text-decoration: none; }
+  button { font-family: inherit; cursor: pointer; }
+  a:focus-visible, button:focus-visible { outline: 2px solid currentColor; outline-offset: 3px; }
+  .drawer a:focus-visible, .foot-col a:focus-visible, .foot-legal a:focus-visible,
+  .foot-lang a:focus-visible { border-radius: 2px; }
+  /* カードは color:#fff を持つため currentColor だと白地に白のリングになる。
+     地の色に応じて明示する */
+  .card:focus-visible { outline: 3px solid var(--ink); outline-offset: 4px; }
+  .range .card:focus-visible { outline-color: #fff; }
+  canvas.scene { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+  /* ============================================================
+     ヘッダー
+     ============================================================ */
+  .site-head {
+    position: fixed; inset: 0 0 auto 0; z-index: 40;
+    display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+    height: 62px; padding: 0 20px;
+    color: #fff;
+    background: linear-gradient(to bottom, rgba(1,2,5,0.52), rgba(1,2,5,0.24));
+    -webkit-backdrop-filter: blur(20px) saturate(150%); backdrop-filter: blur(20px) saturate(150%);
+    box-shadow: 0 1px 0 rgba(255,255,255,0);
+    transition: transform 0.55s var(--ease-out), background-color 0.5s ease, box-shadow 0.5s ease;
+  }
+  .site-head.hidden { transform: translateY(-100%); transition: transform 0.32s var(--ease-exit), background-color 0.5s ease, box-shadow 0.5s ease; }
+  body.scrolled .site-head { background: rgba(1, 2, 5, 0.80); box-shadow: 0 1px 0 rgba(255,255,255,0.08); }
+  body.drawer-open .site-head { transform: none; }
+  .menu-btn {
+    justify-self: start; display: flex; align-items: center; gap: 10px;
+    background: none; border: 0; color: #fff; font-size: 14px; letter-spacing: 0.02em;
+    padding: 8px 6px;
+  }
+  .menu-btn svg { display: block; }
+  .menu-btn .menu-label { transition: opacity var(--dur-micro) ease; }
+  .menu-btn:hover .menu-label { opacity: 0.75; }
+  .wordmark {
+    font-size: 15px; font-weight: 700; letter-spacing: 0.42em; text-indent: 0.42em;
+    white-space: nowrap;
+    transition: transform 0.45s var(--ease-out);
+  }
+  body.scrolled .wordmark { transform: scale(0.93); }
+  .head-icons { justify-self: end; display: flex; align-items: center; gap: 18px; }
+  .head-icons .flag {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: radial-gradient(circle at 50% 50%, #d0021b 0 34%, #fff 35% 100%);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.35);
+  }
+  .head-icons a { opacity: 0.92; transition: opacity var(--dur-micro) ease; }
+  .head-icons a:hover { opacity: 0.7; }
+  .head-icons svg { display: block; }
+  @media (max-width: 700px) {
+    /* display:none にするとボタンのアクセシブルネームが消えるので視覚的にのみ隠す */
+    .menu-label {
+      position: absolute; width: 1px; height: 1px;
+      overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+    }
+    .wordmark { font-size: 12px; letter-spacing: 0.3em; text-indent: 0.3em; }
+    .head-icons { gap: 12px; }
+    .head-icons .flag { width: 19px; height: 19px; }
+  }
+
+  /* ============================================================
+     メニュードロワー
+     ============================================================ */
+  .drawer-backdrop {
+    position: fixed; inset: 0; z-index: 50;
+    background: rgba(1, 2, 5, 0.45);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    opacity: 0; pointer-events: none; transition: opacity 0.4s ease;
+  }
+  .drawer {
+    position: fixed; top: 0; bottom: 0; left: 0; z-index: 51;
+    width: min(420px, 92vw); background: #fff; color: var(--ink);
+    transform: translateX(-102%);
+    /* 閉じている間は visibility でフォーカスを完全に断つ(画面外に置くだけでは Tab が入る) */
+    visibility: hidden;
+    transition: transform 0.38s var(--ease-exit), visibility 0s linear 0.38s;
+    padding: 18px 28px 32px; overflow-y: auto;
+  }
+  body.drawer-open .drawer {
+    transform: none; visibility: visible;
+    transition: transform 0.56s var(--ease-panel), visibility 0s;
+  }
+  body.drawer-open .drawer-backdrop { opacity: 1; pointer-events: auto; }
+  .drawer-close {
+    background: none; border: 0; font-size: 15px; display: flex; align-items: center; gap: 10px;
+    padding: 10px 4px; margin-bottom: 18px;
+    opacity: 0; transition: opacity 0.15s ease;
+  }
+  body.drawer-open .drawer-close { opacity: 1; transition: opacity 0.42s var(--ease-out) 0.16s; }
+  .drawer-nav a {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 15px 4px; font-size: 17px; font-weight: 600;
+    font-feature-settings: "palt"; letter-spacing: 0.02em;
+    opacity: 0; transform: translateX(-14px);
+    transition: opacity 0.15s ease, transform 0.15s ease, color var(--dur-micro) ease;
+  }
+  body.drawer-open .drawer-nav a { opacity: 1; transform: none; transition: opacity 0.42s var(--ease-out), transform 0.42s var(--ease-out), color var(--dur-micro) ease; }
+  body.drawer-open .drawer-nav a:nth-child(1) { transition-delay: 0.16s, 0.16s, 0s; }
+  body.drawer-open .drawer-nav a:nth-child(2) { transition-delay: 0.205s, 0.205s, 0s; }
+  body.drawer-open .drawer-nav a:nth-child(3) { transition-delay: 0.25s, 0.25s, 0s; }
+  body.drawer-open .drawer-nav a:nth-child(4) { transition-delay: 0.295s, 0.295s, 0s; }
+  .drawer-nav a .chev { color: #8a8a8f; font-weight: 400; transition: transform var(--dur-small) var(--ease-out); }
+  .drawer-nav a:hover { color: #55555a; }
+  .drawer-nav a:hover .chev { transform: translateX(4px); }
+  .drawer-sub {
+    margin-top: 28px; border-top: 1px solid var(--line); padding-top: 18px;
+    opacity: 0; transform: translateY(8px); transition: opacity 0.15s ease, transform 0.15s ease;
+  }
+  body.drawer-open .drawer-sub { opacity: 1; transform: none; transition: opacity 0.45s var(--ease-out) 0.34s, transform 0.45s var(--ease-out) 0.34s; }
+  .drawer-sub a {
+    display: inline-block; padding: 9px 4px; font-size: 13.5px; color: #59595e;
+    background: linear-gradient(currentColor, currentColor) left bottom / 0% 1px no-repeat;
+    transition: background-size 0.35s var(--ease-out), color var(--dur-micro) ease;
+  }
+  .drawer-sub a:hover { background-size: 100% 1px; color: var(--ink); }
+
+  /* ============================================================
+     ヒーロー
+     ============================================================ */
+  .hero {
+    position: relative; height: 100vh; height: 100svh; min-height: 560px;
+    background: #101013; color: #fff; overflow: hidden;
+  }
+  .hero-media, .hero > canvas {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  /* 可読性スクリム(canvasの上・文字の下) */
+  .hero::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 1;
+    background:
+      linear-gradient(to top, rgba(8,8,11,0.60) 0%, rgba(8,8,11,0.28) 24%, rgba(8,8,11,0) 48%),
+      linear-gradient(to bottom, rgba(8,8,11,0.32) 0%, rgba(8,8,11,0) 16%);
+  }
+  .hero-copy {
+    position: absolute; left: clamp(20px, 5vw, 76px); right: clamp(20px, 5vw, 76px);
+    bottom: clamp(96px, 15vh, 150px); z-index: 2;
+  }
+  /* マスク付きの行。和欧混植でグリフが行ボックスを越えても切れないよう、
+     クリップ範囲を padding で広げ、同量の負マージンで位置を戻す */
+  .hero-copy .line {
+    overflow: hidden;
+    padding-top: 0.12em; padding-bottom: 0.24em;
+    margin-top: -0.12em; margin-bottom: -0.24em;
+  }
+  .hero-copy .hero-eyebrow.line { margin-bottom: calc(10px - 0.24em); }
+  .hero-copy .line-inner {
+    display: inline-block;
+    transition: transform 0.76s var(--ease-enter), opacity 0.28s ease, filter 0.4s ease;
+  }
+  .hero-copy .line:nth-child(2) .line-inner { transition-delay: 90ms; }
+  .hero-copy .line:nth-child(3) .line-inner { transition-delay: 180ms; }
+  .hero-copy.exit .line-inner {
+    opacity: 0; transform: translateY(-14px); filter: blur(4px);
+    transition: opacity 0.42s var(--ease-exit), transform 0.42s var(--ease-exit), filter 0.42s var(--ease-exit);
+    transition-delay: 0s !important;
+  }
+  .hero-copy.enter .line-inner { transition: none; transform: translateY(135%); opacity: 0; filter: none; }
+  /* 字送りは動かさない(合成できずレイアウトが毎フレーム走るため) */
+  .hero-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.42em; opacity: 0.72; text-transform: uppercase; }
+  .hero-title {
+    font-size: clamp(38px, 6.6vw, 82px); font-weight: 700;
+    font-feature-settings: "palt"; letter-spacing: 0.01em;
+    line-height: 1.12; text-wrap: balance;
+    text-shadow: 0 1px 28px rgba(0, 0, 0, 0.35);
+  }
+  .hero-copy .cta {
+    display: inline-block; margin-top: 26px;
+    padding: 14px 26px; border-radius: 8px; border: 1px solid var(--glass-edge);
+    background: rgba(46, 46, 52, 0.38);
+    -webkit-backdrop-filter: blur(14px) saturate(1.15); backdrop-filter: blur(14px) saturate(1.15);
+    box-shadow: var(--glass-highlight);
+    color: #fff; font-size: 14px; font-weight: 600;
+    transition: background-color 0.3s ease, border-color 0.3s ease, transform var(--dur-small) var(--ease-out);
+  }
+  .hero-copy .cta:hover { background: rgba(84, 84, 92, 0.5); border-color: rgba(255,255,255,0.22); transform: translateY(-1px); }
+  .hero-copy .cta:active { transform: translateY(0) scale(0.985); transition-duration: 120ms; }
+
+  /* スライド進行バー */
+  .hero-progress {
+    position: absolute; left: clamp(20px, 5vw, 76px); z-index: 2;
+    bottom: max(38px, env(safe-area-inset-bottom, 0px) + 28px);
+    display: flex; gap: 10px;
+  }
+  .hero-progress button {
+    position: relative; width: 56px; height: 2px; border: 0; border-radius: 1px;
+    background: rgba(255, 255, 255, 0.24);
+    padding: 0; margin: 12px 0;
+    transition: background-color var(--dur-micro) ease;
+  }
+  .hero-progress button::before { content: ""; position: absolute; inset: -12px 0; }
+  .hero-progress button:hover { background: rgba(255, 255, 255, 0.4); }
+  .hero-progress button:focus-visible { outline: 1px solid rgba(255,255,255,0.6); outline-offset: 6px; }
+  .hero-progress .fill {
+    position: absolute; inset: 0; border-radius: 1px;
+    background: rgba(242, 236, 224, 0.92);
+    transform: scaleX(0); transform-origin: left center;
+    transition: opacity 0.24s ease;
+  }
+  .hero-progress button.past .fill { transform: scaleX(1); opacity: 0.5; }
+  /* 狭い画面では進行バーと下向き矢印の当たり判定が重なるので矢印を隠す */
+  @media (max-width: 700px) {
+    .hero-progress button { width: 40px; }
+    .hero-down { display: none; }
+  }
+
+  .hero-down {
+    position: absolute; left: 50%; bottom: 30px; transform: translateX(-50%); z-index: 2;
+    color: #fff; padding: 8px; opacity: 0.85;
+  }
+  .hero-down svg { display: block; }
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-down { animation: hero-dip 3.2s ease-in-out infinite; }
+    @keyframes hero-dip { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 5px); } }
+  }
+  .hero-pause {
+    position: absolute; right: 26px; z-index: 2;
+    bottom: max(26px, env(safe-area-inset-bottom, 0px) + 16px);
+    width: 42px; height: 42px; border-radius: 50%;
+    border: 1px solid var(--glass-edge);
+    display: grid; place-items: center;
+    background: var(--glass-fill);
+    -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+    box-shadow: var(--glass-highlight);
+    color: #fff;
+    transition: background-color var(--dur-micro) ease, border-color var(--dur-micro) ease;
+  }
+  .hero-pause:hover { background: var(--glass-fill-hover); border-color: rgba(255,255,255,0.22); }
+  .hero-pause svg { grid-area: 1 / 1; transition: opacity 160ms ease; }
+  .hero-pause .icon-play { opacity: 0; }
+  .hero-pause.paused .icon-pause { opacity: 0; }
+  .hero-pause.paused .icon-play { opacity: 1; }
+
+  /* 初回ロードの振り付け(JS有効時のみ) */
+  .js body:not(.is-loaded) .hero-copy .line-inner { transform: translateY(135%); opacity: 0; }
+  .js body:not(.is-loaded) .site-head { opacity: 0; transform: translateY(-10px); }
+  .js body:not(.is-loaded) .hero-down,
+  .js body:not(.is-loaded) .hero-pause,
+  .js body:not(.is-loaded) .hero-progress { opacity: 0; }
+  body.is-loaded .hero-copy .line:nth-child(1) .line-inner { transition-delay: 0.35s; }
+  body.is-loaded .hero-copy .line:nth-child(2) .line-inner { transition-delay: 0.5s; }
+  body.is-loaded .hero-copy .line:nth-child(3) .line-inner { transition-delay: 0.7s; }
+  body.is-loaded.hero-settled .hero-copy .line .line-inner { transition-delay: 0s; }
+  body.is-loaded.hero-settled .hero-copy .line:nth-child(2) .line-inner { transition-delay: 90ms; }
+  body.is-loaded.hero-settled .hero-copy .line:nth-child(3) .line-inner { transition-delay: 180ms; }
+  body.is-loaded .site-head { opacity: 1; transform: none; transition: opacity 0.72s var(--ease-out) 0.9s, transform 0.72s var(--ease-out) 0.9s, background-color 0.5s ease, box-shadow 0.5s ease; }
+  body.is-loaded .hero-down, body.is-loaded .hero-pause, body.is-loaded .hero-progress {
+    opacity: 1; transition: opacity 0.6s var(--ease-out) 1.4s;
+  }
+  body.is-loaded .hero-down { opacity: 0.85; }
+
+  /* ============================================================
+     セクション共通
+     ============================================================ */
+  .section { padding: clamp(56px, 8vw, 104px) clamp(16px, 3.4vw, 48px); }
+  .container { max-width: 1400px; margin: 0 auto; }
+  .section-title {
+    font-size: clamp(26px, 3.4vw, 42px); font-weight: 700;
+    font-feature-settings: "palt"; letter-spacing: 0.02em;
+    line-height: 1.3; text-wrap: balance;
+  }
+  .section-title::after {
+    content: ""; display: block; width: 48px; height: 1px;
+    background: currentColor; opacity: 0.18; margin-top: 18px;
+  }
+  .section-title.centered { text-align: center; }
+  .section-title.centered::after { margin-inline: auto; }
+
+  /* スクロールリビール(ラッチ式) */
+  .js .rv { opacity: 0; transform: translateY(var(--rise)); }
+  .js .rv.on { opacity: 1; transform: none; }
+  .rv { transition: opacity var(--dur-med) var(--ease-out), transform 0.72s var(--ease-out); }
+  .js .lead.rv { transform: translateY(var(--rise-sm)); transition-delay: 0.12s; }
+  /* ============================================================
+     カード共通
+     ============================================================ */
+  .card {
+    position: relative; display: block; overflow: hidden; border-radius: var(--radius);
+    background: #101013; color: #fff;
+    box-shadow: 0 1px 2px rgba(1,2,5,0.06), 0 10px 28px rgba(1,2,5,0.08);
+    transition: transform 0.6s var(--ease-out), box-shadow 0.6s var(--ease-out),
+                opacity 0.65s var(--ease-out), border-color var(--dur-micro) ease;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 2px 4px rgba(1,2,5,0.07), 0 20px 48px rgba(1,2,5,0.13); }
+  .card .scene {
+    transition: transform 1.3s var(--ease-out), filter 1.1s var(--ease-out);
+    transform-origin: 50% 55%; will-change: transform;
+  }
+  .card:hover .scene { transform: scale(1.035); filter: brightness(1.07); }
+  /* 文字域スクリム */
+  .card::after {
+    content: ""; position: absolute; inset: auto 0 0 0; height: 38%; pointer-events: none;
+    background: linear-gradient(to top, rgba(0,0,0,0.45), transparent);
+  }
+  .card > *:not(.scene) { z-index: 2; }
+  /* 明るいCGを持つカード:スクリムを外し、文字とボタンを墨に */
+  .card.light-media::after { display: none; }
+  .card.light-media .card-label { color: #1a1b20; text-shadow: none; }
+  .card.light-media .card-arrow {
+    background: rgba(255, 255, 255, 0.55); color: #1a1b20;
+    border-color: rgba(1, 2, 5, 0.12);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 4px 16px rgba(1,2,5,0.10);
+  }
+  .card.light-media:hover .card-arrow { background: rgba(255,255,255,0.8); border-color: rgba(1,2,5,0.2); }
+  /* リビール:カードは 28px 上昇+中のCGが遅れて据わる */
+  .js .card.rv { transform: translateY(28px); }
+  .js .card.rv .scene { transform: scale(1.05); }
+  .js .card.rv.on { transform: none; }
+  .js .card.rv.on .scene { transform: scale(1); }
+  .card.rv, .card.rv .scene { transition-delay: calc(var(--i, 0) * var(--stagger-card)); }
+  /* リビール解除後のホバー。.js .card.rv.on(0,4,0)に勝てる詳細度で書く */
+  .js .card.rv.on:hover { transform: translateY(-3px); }
+  .js .card.rv.on:hover .scene { transform: scale(1.035); }
+  /* スタッガー用の遅延はリビール完了後に外す(でないとホバーが遅れて反応する) */
+  .card.rv.settled, .card.rv.settled .scene { transition-delay: 0s; }
+
+  .story-card { aspect-ratio: 4 / 3; }
+  @media (min-width: 900px) { .story-card { aspect-ratio: 21 / 10; } }
+  .card-label {
+    position: absolute; left: 22px; bottom: 18px; right: 76px;
+    font-size: 16.5px; font-weight: 600;
+    font-feature-settings: "palt"; letter-spacing: 0.02em;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.3);
+  }
+  .card-arrow {
+    position: absolute; right: 18px; bottom: 14px;
+    width: 40px; height: 40px; border-radius: 50%;
+    display: grid; place-items: center;
+    background: var(--glass-fill);
+    -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-edge);
+    box-shadow: var(--glass-highlight);
+    font-size: 17px;
+    transition: background-color var(--dur-micro) ease, border-color var(--dur-micro) ease;
+  }
+  .card-arrow .glyph { display: block; transition: transform var(--dur-small) var(--ease-out); }
+  .card:hover .card-arrow { background: var(--glass-fill-hover); border-color: rgba(255,255,255,0.24); }
+  .card:hover .card-arrow .glyph { transform: translateX(3px); }
+
+  .stories { background: var(--paper); border-bottom: 1px solid rgba(1,2,5,0.06); }
+  .stories .container { display: flex; flex-direction: column; gap: 26px; }
+
+  /* ============================================================
+     モデルレンジ(ダーク)
+     ============================================================ */
+  .range {
+    position: relative;
+    background: radial-gradient(120% 80% at 50% 0%, #17171d 0%, #0e0e12 52%, #0a0a0e 100%);
+    color: #fff;
+  }
+  .range::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    background-size: 160px; opacity: 0.035; mix-blend-mode: overlay;
+  }
+  .range .container { position: relative; }
+  .range .section-title { margin-bottom: 0; }
+  .range-lead {
+    max-width: 38em; margin: 20px auto clamp(36px, 5vw, 64px);
+    text-align: center; font-size: 14.5px; line-height: 1.95;
+    color: rgba(255, 255, 255, 0.72); font-feature-settings: "palt";
+    transition: opacity var(--dur-med) var(--ease-out) 0.12s, transform 0.72s var(--ease-out) 0.12s;
+  }
+  .model-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+  @media (max-width: 900px) { .model-grid { grid-template-columns: 1fr; } }
+  .model-card {
+    aspect-ratio: 1 / 1.02;
+    background: #101015; border: 1px solid rgba(255,255,255,0.07);
+    box-shadow: none;
+  }
+  .model-card:hover { border-color: rgba(255,255,255,0.13); transform: translateY(-3px); box-shadow: none; }
+  @media (max-width: 900px) { .model-card { aspect-ratio: 1 / 1.1; } }
+  /* 3枚目は全幅に。2列の右下が空くのを避け、editorial なリズムをつくる */
+  @media (min-width: 901px) {
+    .model-card:last-child { grid-column: 1 / -1; aspect-ratio: 21 / 9; }
+  }
+  .model-logo {
+    position: absolute; top: 26px; left: 0; right: 0; text-align: center; z-index: 2;
+    text-shadow: 0 2px 18px rgba(0,0,0,0.5);
+    transition: opacity 0.6s var(--ease-out) 0.15s, filter 0.6s var(--ease-out) 0.15s;
+  }
+  .js .model-card.rv .model-logo { opacity: 0; }
+  .js .model-card.rv .model-logo .script { filter: blur(3px); }
+  .js .model-card.rv.on .model-logo { opacity: 1; }
+  .js .model-card.rv.on .model-logo .script { filter: blur(0); }
+  .model-logo .block {
+    font-size: clamp(30px, 3.4vw, 44px); font-weight: 800; letter-spacing: 0.16em; text-indent: 0.16em;
+  }
+  .model-logo .script {
+    display: inline-block; padding: 4px 0;
+    font-family: var(--script); font-weight: 700;
+    font-size: clamp(38px, 4.6vw, 58px); letter-spacing: 0.02em;
+    text-shadow: 0 2px 18px rgba(0,0,0,0.5), 0 0 32px rgba(255,255,255,0.16);
+    transition: inherit;
+  }
+  .model-foot {
+    position: absolute; left: 22px; right: 22px; bottom: 18px; z-index: 2;
+    display: flex; flex-direction: column; gap: 12px; align-items: flex-start;
+  }
+  .tag-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .tag {
+    padding: 6px 13px; border-radius: 999px; font-size: 12px; font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    background: var(--glass-fill);
+    -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-edge);
+    box-shadow: var(--glass-highlight);
+    color: rgba(255,255,255,0.82);
+    transition: border-color var(--dur-micro) ease, color var(--dur-micro) ease,
+                opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+  }
+  .model-card:hover .tag { border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.95); }
+  .js .model-card.rv .tag { opacity: 0; transform: translateY(6px); }
+  .js .model-card.rv.on .tag { opacity: 1; transform: none; }
+  .model-card.rv.on .tag:nth-child(1) { transition-delay: 0.25s; }
+  .model-card.rv.on .tag:nth-child(2) { transition-delay: 0.3s; }
+  /* 説明文が2行になっても CTA を同じ行に保つ(カード間で足並みを揃えるため) */
+  .model-desc-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px 16px; width: 100%; }
+  .model-desc { flex: 1 1 auto; min-width: 0; font-size: 14.5px; font-weight: 500; line-height: 1.9; max-width: 30em; text-shadow: 0 1px 8px rgba(0,0,0,0.3); }
+  @media (max-width: 700px) { .model-desc-row { flex-wrap: wrap; } }
+  .model-cta {
+    flex-shrink: 0; display: flex; align-items: center; gap: 8px;
+    padding: 11px 18px; border-radius: 999px; font-size: 13.5px; font-weight: 600;
+    background: var(--glass-fill);
+    -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-edge);
+    box-shadow: var(--glass-highlight);
+    transition: background-color var(--dur-small) ease, color var(--dur-small) ease, border-color var(--dur-small) ease;
+  }
+  .model-card:hover .model-cta { background: #fff; color: #0e0e12; border-color: #fff; }
+  .model-note {
+    position: relative; overflow: hidden;
+    align-self: stretch;
+    padding: 9px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    background: rgba(30, 30, 34, 0.72);
+    -webkit-backdrop-filter: var(--glass-blur); backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--glass-edge);
+    border-left: 2px solid rgba(255,255,255,0.55);
+  }
+  /* リビール後に一度だけ流れる光沢 */
+  .model-note::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.18) 50%, transparent 60%);
+    transform: translateX(-120%);
+  }
+  .model-card.rv.on .model-note::after { animation: note-sheen 1.2s var(--ease-inout) 1s 1 both; }
+  @keyframes note-sheen { to { transform: translateX(120%); } }
+  @media (prefers-reduced-motion: reduce) { .model-card.rv.on .model-note::after { animation: none; } }
+
+  /* ============================================================
+     収蔵継承車
+     ============================================================ */
+  .heritage { background: linear-gradient(to bottom, #f3f4f5, #eceef0); }
+  .heritage .lead { max-width: 42em; margin-top: 14px; color: #45454c; line-height: 1.9; }
+  .heritage-search { margin: 30px 0 10px; max-width: 560px; position: relative; }
+  .heritage-search input {
+    width: 100%; padding: 16px 18px 16px 48px;
+    border: 1px solid #d6d7db; border-radius: 10px; background: #fff;
+    box-shadow: inset 0 1px 2px rgba(1,2,5,0.04);
+    font-family: inherit; font-size: 15px; color: var(--ink);
+    transition: border-color 0.25s ease, box-shadow 0.28s ease;
+  }
+  .heritage-search input:hover { border-color: #b9bac0; }
+  .heritage-search input:focus {
+    outline: none; border-color: #1a1b20;
+    box-shadow: inset 0 1px 2px rgba(1,2,5,0.04), 0 0 0 4px rgba(1,2,5,0.07);
+  }
+  .heritage-search input::placeholder { color: #9a9ba1; }
+  .heritage-search .mag {
+    position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+    color: #9a9ba1; transition: color 0.25s ease;
+  }
+  .heritage-search:focus-within .mag { color: #1a1b20; }
+  .heritage .note { font-size: 12.5px; color: #78787f; }
+  .heritage-search input { -webkit-appearance: none; appearance: none; }
+
+  /* 収蔵継承車のリスト。台帳の見開きのように、罫線と数字で組む */
+  .heritage-list { list-style: none; margin: 34px 0 0; display: grid; gap: 1px; background: rgba(1,2,5,0.09); border-block: 1px solid rgba(1,2,5,0.09); }
+  @media (min-width: 860px) { .heritage-list { grid-template-columns: repeat(3, 1fr); } }
+  .heritage-item { background: #f6f7f8; padding: 22px 24px 24px; }
+  .hi-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 14px; }
+  .hi-name { font-size: 17px; font-weight: 600; letter-spacing: 0.04em; }
+  .hi-en { font-family: var(--script); font-weight: 700; font-size: 19px; margin-left: 4px; color: #55555c; }
+  .hi-ledger { font-size: 11.5px; color: #8a8a91; font-variant-numeric: tabular-nums; letter-spacing: 0.04em; white-space: nowrap; }
+  .hi-specs { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-bottom: 14px; }
+  .hi-specs div { display: flex; align-items: baseline; gap: 8px; }
+  .hi-specs dt { font-size: 11px; color: #8a8a91; letter-spacing: 0.06em; }
+  .hi-specs dd { font-size: 13.5px; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .hi-note { font-size: 12.5px; line-height: 1.9; color: #55555c; }
+  .heritage-item[hidden] { display: none; }
+  .heritage-empty { margin-top: 22px; font-size: 13.5px; color: #55555c; }
+  .heritage-visual {
+    margin-top: 40px; border-radius: var(--radius); overflow: hidden;
+    position: relative; aspect-ratio: 21 / 9; background: #e6e7e9;
+    border: 1px solid rgba(1,2,5,0.07);
+    box-shadow: 0 1px 2px rgba(1,2,5,0.05), 0 12px 32px rgba(1,2,5,0.07);
+  }
+  @media (max-width: 700px) { .heritage-visual { aspect-ratio: 4 / 3; } }
+
+  /* ============================================================
+     もっと知る
+     ============================================================ */
+  .more { background: var(--paper); }
+  .more .section-title { margin-bottom: 0; }
+  .more .container { display: flex; flex-direction: column; gap: 26px; }
+  .more-card { aspect-ratio: 4 / 3; }
+  @media (min-width: 900px) { .more-card { aspect-ratio: 21 / 9; } }
+
+  /* ============================================================
+     フッター
+     ============================================================ */
+  .site-foot {
+    position: relative;
+    background: linear-gradient(to bottom, #0a0a0e, #010205 240px);
+    border-top: 1px solid rgba(255,255,255,0.06);
+    color: #fff; padding: 24px clamp(16px, 3.4vw, 48px) 40px;
+  }
+  .site-foot::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    background-size: 160px; opacity: 0.03; mix-blend-mode: overlay;
+  }
+  .site-foot > * { position: relative; }
+  .foot-top { text-align: center; padding: 26px 0 34px; }
+  .foot-top a { display: inline-flex; flex-direction: column; align-items: center; gap: 8px; font-size: 13.5px; opacity: 0.9; }
+  .foot-top a .up-glyph { display: inline-block; transition: transform 0.55s var(--ease-out); }
+  .foot-top a:hover { opacity: 1; }
+  .foot-top a:hover .up-glyph { transform: translateY(-3px); transition-duration: var(--dur-small); }
+  .foot-body { max-width: 1400px; margin: 0 auto; }
+  .foot-news { font-size: 13px; opacity: 0.8; margin-bottom: 18px; }
+  .foot-lang { display: flex; align-items: center; gap: 12px; font-size: 13.5px; margin-bottom: 40px; }
+  .foot-lang .flag { width: 26px; height: 26px; border-radius: 50%; background: radial-gradient(circle, #d0021b 0 34%, #fff 35% 100%); }
+  .foot-lang a { text-decoration: underline; text-underline-offset: 3px; opacity: 0.85; transition: opacity var(--dur-micro) ease; }
+  .foot-lang a:hover { opacity: 1; }
+  .foot-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-bottom: 46px; }
+  @media (max-width: 820px) { .foot-cols { grid-template-columns: 1fr; } }
+  .foot-col h3 { font-size: 12px; font-weight: 400; color: #9a9aa0; margin-bottom: 14px; letter-spacing: 0.02em; }
+  .foot-col a {
+    display: inline-block; padding: 7px 0; font-size: 14.5px; font-weight: 500;
+    background: linear-gradient(currentColor, currentColor) left calc(100% - 4px) / 0% 1px no-repeat;
+    transition: background-size 0.35s var(--ease-out), color var(--dur-micro) ease;
+  }
+  .foot-col a:hover { color: #c9c9cf; background-size: 100% 1px; }
+  .foot-col { display: flex; flex-direction: column; align-items: flex-start; }
+  .foot-social { display: flex; align-items: center; gap: 26px; margin-bottom: 40px; }
+  .foot-social a { opacity: 0.85; transition: opacity var(--dur-micro) ease, transform var(--dur-small) var(--ease-out); }
+  .foot-social a:hover { opacity: 1; transform: translateY(-2px); }
+  .foot-legal { font-size: 12.5px; color: #b4b4ba; font-variant-numeric: tabular-nums; }
+  .foot-legal .row { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 4px 14px; }
+  .foot-legal .row a { text-decoration: underline; text-underline-offset: 3px; transition: color var(--dur-micro) ease; }
+  .foot-legal .row a:hover { color: #fff; }
+  .foot-mark {
+    text-align: center; margin-top: 46px; font-size: 14px; font-weight: 700;
+    letter-spacing: 0.42em; text-indent: 0.42em; color: #8e8e96;
+    transition: color 0.6s ease;
+  }
+  .site-foot:hover .foot-mark { color: #d8d8de; }
+
+  /* 動きを減らす設定では、リビール本体だけでなく子要素の演出も残さず止める */
+  @media (prefers-reduced-motion: reduce) {
+    .js .rv { opacity: 1; transform: none; transition: none; }
+    .js .card.rv, .js .model-card.rv { transform: none; }
+    .js .card.rv .scene, .js .card.rv.on .scene { transform: none; transition: none; }
+    .js .card.rv.on:hover, .js .card.rv.on:hover .scene { transform: none; }
+    .js .model-card.rv .model-logo { opacity: 1; transition: none; }
+    .js .model-card.rv .model-logo .script { filter: none; }
+    .js .model-card.rv .tag { opacity: 1; transform: none; transition: none; }
+    .hero-copy .line-inner,
+    .hero-copy.exit .line-inner,
+    .hero-copy.enter .line-inner { transition: none !important; transition-delay: 0s !important; filter: none; }
+    .js body:not(.is-loaded) .hero-copy .line-inner { transform: none; opacity: 1; }
+    .js body:not(.is-loaded) .site-head { opacity: 1; transform: none; }
+    .js body:not(.is-loaded) .hero-down,
+    .js body:not(.is-loaded) .hero-pause,
+    .js body:not(.is-loaded) .hero-progress { opacity: 1; }
+    body.is-loaded .hero-copy .line .line-inner,
+    body.is-loaded .site-head,
+    body.is-loaded .hero-down, body.is-loaded .hero-pause, body.is-loaded .hero-progress {
+      transition-duration: 1ms !important; transition-delay: 0s !important;
+    }
+    .drawer, body.drawer-open .drawer, .drawer-backdrop, .drawer-close,
+    .drawer-nav a, body.drawer-open .drawer-nav a,
+    .drawer-sub, body.drawer-open .drawer-sub {
+      transition-duration: 1ms !important; transition-delay: 0s !important;
+    }
+    .card { transition-duration: 1ms; }
+    .model-card.rv.on .model-note::after { animation: none; }
+  }
+
+
+  /* ============================================================
+     印刷。リビール前の要素が空白で出力されるのを防ぎ、
+     背景を落として白地・黒文字に組み直す
+     ============================================================ */
+  @media print {
+    .js .rv, .js .card.rv, .js .card.rv .scene,
+    .js .model-card.rv .model-logo, .js .model-card.rv .tag,
+    .hero-copy .line-inner {
+      opacity: 1 !important; transform: none !important; filter: none !important;
+    }
+    .site-head, .drawer, .drawer-backdrop, .skip-link,
+    .hero-progress, .hero-pause, .hero-down, .foot-top { display: none !important; }
+    .hero { height: auto !important; min-height: 0 !important; padding: 0 0 24px; background: #fff; color: #000; }
+    .hero > canvas, canvas.scene { display: none !important; }
+    .hero-copy { position: static; }
+    .hero::after, .range::before, .site-foot::before { display: none; }
+    .range, .site-foot, .card, .model-card, .heritage-visual {
+      background: #fff !important; color: #000 !important;
+      border: 1px solid #ccc; box-shadow: none !important;
+    }
+    .card, .model-card, .heritage-visual, .story-card, .more-card { aspect-ratio: auto !important; }
+    .card::after { display: none; }
+    .card-label, .model-desc, .model-logo, .foot-mark, .foot-col a, .foot-legal,
+    .hero-title, .hero-eyebrow, .tag, .model-cta, .model-note {
+      position: static !important; text-shadow: none !important; color: #000 !important;
+    }
+    .model-foot { position: static; }
+    .section { padding: 16px 0; break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#stories">本文へスキップ</a>
+<h1 class="vh">バーテックスドライブ ジャパン 公式ウェブサイト</h1>
+
+<header class="site-head" id="siteHead">
+  <button class="menu-btn" id="menuBtn" type="button" aria-haspopup="dialog" aria-expanded="false" aria-controls="drawer">
+    <svg width="18" height="14" viewBox="0 0 18 14" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true" focusable="false"><path d="M0 1h18M0 7h18M0 13h18"/></svg>
+    <span class="menu-label">Menu</span>
+  </button>
+  <a class="wordmark" href="#top">VERTEX DRIVE</a>
+  <div class="head-icons">
+    <span class="flag" role="img" aria-label="表示地域:日本 / 日本語"></span>
+    <a href="#visit" title="来館案内" aria-label="来館案内">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="6.5" r="3.4"/><path d="M2.8 18c1.2-3.6 4-5.4 7.2-5.4s6 1.8 7.2 5.4"/></svg>
+    </a>
+  </div>
+</header>
+
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+<div class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="メインメニュー">
+  <button class="drawer-close" id="drawerClose" type="button">
+    <svg width="15" height="15" viewBox="0 0 15 15" stroke="currentColor" stroke-width="1.6" aria-hidden="true" focusable="false"><path d="M1 1l13 13M14 1L1 14"/></svg>
+    閉じる
+  </button>
+  <nav aria-label="サイト内メニュー">
+    <div class="drawer-nav">
+      <a href="#models">モデル <span class="chev" aria-hidden="true">›</span></a>
+      <a href="#heritage">収蔵継承車 <span class="chev" aria-hidden="true">›</span></a>
+      <a href="#more">工房の世界 <span class="chev" aria-hidden="true">›</span></a>
+      <a href="#visit">来館・お問い合わせ <span class="chev" aria-hidden="true">›</span></a>
+    </div>
+    <div class="drawer-sub">
+      <a href="#stories">最新情報</a>
+      <a href="#heritage">継承プログラム</a>
+      <a href="#visit">面談のご予約</a>
+    </div>
+  </nav>
+</div>
+
+<main id="top">
+
+  <!-- ================= ヒーロー =================
+       現在は canvas の CG プレースホルダー。
+       本番動画が用意できたら <canvas> を削除し、下の <video> を有効化。
+       生成プロンプトは hero-video-prompt.md 参照。 -->
+  <section class="hero" id="hero" aria-label="モデル紹介スライドショー">
+    <canvas id="heroCanvas" aria-hidden="true"></canvas>
+    <noscript>
+      <p class="vh">このページの背景表現にはスクリプトを使用しています。無効の場合も内容はすべてお読みいただけます。</p>
+    </noscript>
+    <!--
+    <video class="hero-media" autoplay muted loop playsinline poster="assets/hero-poster.webp" aria-hidden="true">
+      <source src="assets/hero.webm" type="video/webm" />
+      <source src="assets/hero.mp4" type="video/mp4" />
+    </video>
+    -->
+    <div class="hero-copy" id="heroCopy">
+      <p class="hero-eyebrow line"><span class="line-inner" id="heroEyebrow">正午という時刻</span></p>
+      <p class="hero-title line" aria-live="polite"><span class="line-inner" id="heroTitle">常磐 TOKIWA</span></p>
+      <p class="line" style="margin:0"><span class="line-inner"><a class="cta" id="heroCta" href="#models">詳しくはこちら</a></span></p>
+    </div>
+    <div class="hero-progress" id="heroProgress" role="group" aria-label="モデルの切り替え">
+      <button type="button" aria-label="常磐 TOKIWA を表示" aria-current="true"><span class="fill"></span></button>
+      <button type="button" aria-label="暁 AKATSUKI を表示"><span class="fill"></span></button>
+      <button type="button" aria-label="宵 YOI を表示"><span class="fill"></span></button>
+    </div>
+    <a class="hero-down" href="#stories" aria-label="下へスクロール">
+      <svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l8 8 8-8"/></svg>
+    </a>
+    <button class="hero-pause" id="heroPause" type="button" aria-label="ヒーローの動きを一時停止" aria-pressed="false">
+      <svg class="icon-pause" width="13" height="14" viewBox="0 0 13 14" fill="currentColor"><rect x="1" width="3.6" height="14" rx="1"/><rect x="8.4" width="3.6" height="14" rx="1"/></svg>
+      <svg class="icon-play" width="13" height="14" viewBox="0 0 13 14" fill="currentColor"><path d="M1.5 0.8v12.4c0 .7.8 1.1 1.4.7l9.3-6.2c.5-.4.5-1.1 0-1.4L2.9 0.1c-.6-.4-1.4 0-1.4.7z"/></svg>
+    </button>
+  </section>
+
+  <!-- ================= ストーリー ================= -->
+  <section class="stories section" id="stories" aria-label="最新情報">
+    <div class="container">
+      <a class="card story-card rv" style="--i:0" href="#models">
+        <canvas class="scene" data-scene="story-tokiwa" aria-hidden="true"></canvas>
+        <span class="card-label">新型 常磐、受注を開始しました</span>
+        <span class="card-arrow" aria-hidden="true"><span class="glyph">→</span></span>
+      </a>
+      <a class="card story-card rv" style="--i:1" href="#models">
+        <canvas class="scene" data-scene="story-akatsuki" aria-hidden="true"></canvas>
+        <span class="card-label">暁 ── 夜明けの試走会、春の予約受付中</span>
+        <span class="card-arrow" aria-hidden="true"><span class="glyph">→</span></span>
+      </a>
+      <a class="card story-card rv" style="--i:2" href="#models">
+        <canvas class="scene" data-scene="story-yoi" aria-hidden="true"></canvas>
+        <span class="card-label">宵 ── 東京・特別展示のご案内</span>
+        <span class="card-arrow" aria-hidden="true"><span class="glyph">→</span></span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ================= モデルレンジ ================= -->
+  <section class="range section" id="models">
+    <div class="container">
+      <h2 class="section-title centered rv">時間への旅は、ここから始まる。</h2>
+      <p class="range-lead rv">一日に三度、光は違う顔をします。正午の常磐、夜明けの暁、日暮れの宵。三台は速さでも価格でもなく、どの時刻に走るために仕立てられたかで分かれています。</p>
+      <div class="model-grid">
+
+        <a class="card model-card rv" style="--i:0" href="#heritage">
+          <canvas class="scene" data-scene="model-tokiwa" aria-hidden="true"></canvas>
+          <div class="model-logo"><span class="block">TOKIWA</span></div>
+          <div class="model-foot">
+            <div class="tag-row"><span class="tag">自然吸気・直6</span><span class="tag">年産6台</span></div>
+            <div class="model-desc-row">
+              <p class="model-desc">象徴的な2ドア・ロングノーズ・グランドツアラー。外板はすべて手叩きのアルミ。</p>
+              <span class="model-cta">エクスペリエンス <span class="glyph">→</span></span>
+            </div>
+          </div>
+        </a>
+
+        <a class="card model-card rv" style="--i:1" href="#heritage">
+          <canvas class="scene" data-scene="model-akatsuki" aria-hidden="true"></canvas>
+          <div class="model-logo"><span class="script">Akatsuki</span></div>
+          <div class="model-foot">
+            <div class="tag-row"><span class="tag">自然吸気・直4 / 940 kg</span><span class="tag">年産4台</span></div>
+            <div class="model-desc-row">
+              <p class="model-desc">屋根を持たない、針の計器だけの最軽量バルケッタ。</p>
+              <span class="model-cta">エクスペリエンス <span class="glyph">→</span></span>
+            </div>
+          </div>
+        </a>
+
+        <a class="card model-card rv" style="--i:2" href="#heritage">
+          <canvas class="scene" data-scene="model-yoi" aria-hidden="true"></canvas>
+          <div class="model-logo"><span class="script">Yoi</span></div>
+          <div class="model-foot">
+            <p class="model-note">本年度の製作枠は満了しました。収蔵継承車をご覧ください。</p>
+            <div class="tag-row"><span class="tag">自然吸気・V8 / 静粛仕様</span><span class="tag">年産2台</span></div>
+            <div class="model-desc-row">
+              <p class="model-desc">街の灯とともに走る、静かなファストバック・グランドクーペ。</p>
+              <span class="model-cta">エクスペリエンス <span class="glyph">→</span></span>
+            </div>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 収蔵継承車 ================= -->
+  <section class="heritage section" id="heritage">
+    <div class="container">
+      <h2 class="section-title rv">収蔵継承車をさがす</h2>
+      <p class="lead rv">前の所有者の時間ごと、次の手に。工房に帰館した個体を、台帳とともにお引き渡しする継承プログラムです。</p>
+      <form class="heritage-search rv" role="search" id="heritageSearch">
+        <svg class="mag" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true" focusable="false"><circle cx="7.5" cy="7.5" r="5.8"/><path d="M12 12l4.6 4.6"/></svg>
+        <input type="search" id="heritageQuery" name="q" placeholder="ご希望のモデル名を入力(例:常磐)"
+               aria-label="収蔵継承車をモデル名でさがす" enterkeyhint="search"
+               autocomplete="off" autocapitalize="off" spellcheck="false">
+      </form>
+      <p class="note" id="heritageNote" aria-live="polite">現在の収蔵継承車は3台。ご案内は面談の後、予約制にて承ります。</p>
+
+      <ul class="heritage-list rv" id="heritageList">
+        <li class="heritage-item" data-name="常磐 TOKIWA">
+          <div class="hi-head">
+            <span class="hi-name">常磐 <span class="hi-en">Tokiwa</span></span>
+            <span class="hi-ledger">台帳 №&thinsp;004</span>
+          </div>
+          <dl class="hi-specs">
+            <div><dt>初度登録</dt><dd>2019年</dd></div>
+            <div><dt>走行</dt><dd>18,400 km</dd></div>
+            <div><dt>外装</dt><dd>漆黒(十九層)</dd></div>
+          </dl>
+          <p class="hi-note">一度の帰館整備を経て、初期の主から二代目へ。革は手の形を覚えはじめています。</p>
+        </li>
+        <li class="heritage-item" data-name="暁 AKATSUKI">
+          <div class="hi-head">
+            <span class="hi-name">暁 <span class="hi-en">Akatsuki</span></span>
+            <span class="hi-ledger">台帳 №&thinsp;011</span>
+          </div>
+          <dl class="hi-specs">
+            <div><dt>初度登録</dt><dd>2022年</dd></div>
+            <div><dt>走行</dt><dd>6,120 km</dd></div>
+            <div><dt>外装</dt><dd>白磁</dd></div>
+          </dl>
+          <p class="hi-note">屋根のない一台。前の主は夜明けにだけ走らせ、雨の日は一度も出しませんでした。</p>
+        </li>
+        <li class="heritage-item" data-name="宵 YOI">
+          <div class="hi-head">
+            <span class="hi-name">宵 <span class="hi-en">Yoi</span></span>
+            <span class="hi-ledger">台帳 №&thinsp;002</span>
+          </div>
+          <dl class="hi-specs">
+            <div><dt>初度登録</dt><dd>2018年</dd></div>
+            <div><dt>走行</dt><dd>41,880 km</dd></div>
+            <div><dt>外装</dt><dd>濃紺</dd></div>
+          </dl>
+          <p class="hi-note">最も走った個体。塗りは深く沈み、これから仕上がっていく一台です。</p>
+        </li>
+      </ul>
+      <p class="heritage-empty" id="heritageEmpty" hidden>該当する収蔵継承車はございません。入荷のご希望も面談にて承ります。</p>
+
+      <div class="heritage-visual rv" data-draw>
+        <canvas class="scene" data-scene="studio-three" aria-hidden="true"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= もっと知る ================= -->
+  <section class="more section" id="more">
+    <div class="container">
+      <h2 class="section-title centered rv">もっと知る</h2>
+    </div>
+    <div class="container" style="margin-top: clamp(32px, 5vw, 56px);">
+      <a class="card more-card rv" style="--i:0" href="#visit">
+        <canvas class="scene" data-scene="craft-metal" aria-hidden="true"></canvas>
+        <span class="card-label">手仕事 ── 1,100時間の板金</span>
+        <span class="card-arrow" aria-hidden="true"><span class="glyph">→</span></span>
+      </a>
+      <a class="card more-card rv" style="--i:1" href="#visit">
+        <canvas class="scene" data-scene="craft-leather" aria-hidden="true"></canvas>
+        <span class="card-label">経年 ── パティナ・プログラム</span>
+        <span class="card-arrow" aria-hidden="true"><span class="glyph">→</span></span>
+      </a>
+      <a class="card more-card light-media rv" style="--i:2" href="#visit" data-draw>
+        <canvas class="scene" data-scene="studio-one" aria-hidden="true"></canvas>
+        <span class="card-label">軽井沢アトリエ 来館のご予約</span>
+        <span class="card-arrow" aria-hidden="true"><span class="glyph">→</span></span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<!-- ================= フッター ================= -->
+<footer class="site-foot" id="visit">
+  <div class="foot-top">
+    <a href="#top"><span class="up-glyph">↑</span><span>上にスクロール</span></a>
+  </div>
+  <div class="foot-body">
+    <h2 class="vh">サイト情報</h2>
+    <p class="foot-news">最新情報を受け取る</p>
+    <div class="foot-lang"><span class="flag" aria-hidden="true"></span>日本 / 日本語 <a href="#visit">変更</a></div>
+    <div class="foot-cols">
+      <div class="foot-col">
+        <h3>所在地とお問い合わせ先</h3>
+        <a href="tel:0267451967">軽井沢アトリエ 0267-45-1967</a>
+        <a href="#visit">面談のご予約</a>
+        <a href="#visit">ニュースレターを購読する</a>
+      </div>
+      <div class="foot-col">
+        <h3>工房情報</h3>
+        <a href="#top">バーテックスドライブ株式会社</a>
+        <a href="#more">台帳について</a>
+        <a href="#more">帰館整備のご案内</a>
+        <a href="#visit">採用情報</a>
+        <a href="#stories">ニュースルーム</a>
+      </div>
+      <div class="foot-col">
+        <h3>公式ウェブサイト</h3>
+        <a href="#top">ホームページ</a>
+        <a href="#models">三つの時刻</a>
+        <a href="#heritage">収蔵継承車をさがす</a>
+        <a href="#visit">来館案内</a>
+      </div>
+    </div>
+    <nav class="foot-social" aria-label="ソーシャルメディア">
+      <a href="#visit" aria-label="Facebook"><svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor"><path d="M10.5 18v-7h2.4l.4-2.8h-2.8V6.4c0-.8.2-1.4 1.4-1.4h1.5V.5C13 .4 12 .3 10.9.3 8.5.3 7 1.7 7 4.4v3.8H4.5V11H7v7h3.5z"/></svg></a>
+      <a href="#visit" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="16" height="16" rx="4.5"/><circle cx="9" cy="9" r="3.8"/><circle cx="13.8" cy="4.2" r="1" fill="currentColor" stroke="none"/></svg></a>
+      <a href="#visit" aria-label="YouTube"><svg width="20" height="15" viewBox="0 0 20 15" fill="currentColor"><rect width="20" height="15" rx="3.4"/><path d="M8 4.4l5 3.1-5 3.1z" fill="#010205"/></svg></a>
+      <a href="#visit" aria-label="X"><svg width="17" height="17" viewBox="0 0 17 17" fill="currentColor"><path d="M.4.5h5l4 5.6L14.2.5h2.3l-6.1 7 6.4 9h-5l-4.3-6-5 6H.2l6.6-7.6z"/></svg></a>
+    </nav>
+    <div class="foot-legal">
+      <p>© <span id="year">2026</span> VERTEX DRIVE KK</p>
+      <div class="row">
+        <a href="#visit">著作権について</a>
+        <a href="#visit">プライバシーポリシー</a>
+        <a href="#visit">勧誘方針</a>
+        <a href="#visit">内部通報制度</a>
+      </div>
+    </div>
+    <p class="foot-mark">VERTEX DRIVE</p>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   共通:プロファイル・ユーティリティ
+   ============================================================ */
+const NOSE = [[0.075, 0.60], [0.028, 0.63], [0.012, 0.68], [0.02, 0.755]];
+const BELT = [
+  [[0.97, 0.80], [0.965, 0.68], [0.93, 0.615], [0.865, 0.60]],
+  [[0.865, 0.60], [0.77, 0.585], [0.70, 0.62], [0.60, 0.635]],
+  [[0.60, 0.635], [0.46, 0.655], [0.38, 0.63], [0.295, 0.625]],
+  [[0.295, 0.625], [0.20, 0.62], [0.10, 0.66], [0.045, 0.72]],
+];
+const FRONT_LOWER = [[[0.045, 0.72], [0.048, 0.79], [0.075, 0.845], [0.16, 0.85]]];
+const REAR_LOWER  = [[[0.97, 0.80], [0.955, 0.835], [0.92, 0.85], [0.845, 0.85]]];
+const SILL        = [[[0.315, 0.85], [0.42, 0.85], [0.60, 0.85], [0.715, 0.85]]];
+
+const PROFILES = {
+  tokiwa: {
+    upper: [
+      [[0.985, 0.62], [0.90, 0.44], [0.80, 0.315], [0.665, 0.30]],
+      [[0.665, 0.30], [0.565, 0.29], [0.52, 0.36], [0.455, 0.475]],
+      [[0.455, 0.475], [0.33, 0.52], [0.17, 0.545], [0.075, 0.60]],
+      NOSE,
+    ],
+    extra: [],
+  },
+  akatsuki: {
+    upper: [
+      [[0.02, 0.75], [0.008, 0.67], [0.03, 0.615], [0.095, 0.585]],
+      [[0.095, 0.585], [0.21, 0.55], [0.34, 0.53], [0.445, 0.525]],
+      [[0.445, 0.525], [0.455, 0.478], [0.462, 0.458], [0.488, 0.448]],
+    ],
+    extra: [
+      [[0.565, 0.505], [0.68, 0.492], [0.82, 0.522], [0.955, 0.578]],
+      [[0.955, 0.578], [0.982, 0.60], [0.985, 0.655], [0.965, 0.72]],
+    ],
+  },
+  yoi: {
+    upper: [
+      [[0.985, 0.615], [0.925, 0.44], [0.845, 0.335], [0.71, 0.315]],
+      [[0.71, 0.315], [0.60, 0.30], [0.55, 0.35], [0.48, 0.46]],
+      [[0.48, 0.46], [0.34, 0.515], [0.17, 0.54], [0.075, 0.60]],
+      NOSE,
+    ],
+    extra: [],
+  },
+};
+
+function sampleCubic(seg, t) {
+  const [p0, c1, c2, p1] = seg, u = 1 - t;
+  return [
+    u*u*u*p0[0] + 3*u*u*t*c1[0] + 3*u*t*t*c2[0] + t*t*t*p1[0],
+    u*u*u*p0[1] + 3*u*u*t*c1[1] + 3*u*t*t*c2[1] + t*t*t*p1[1],
+  ];
+}
+function flatten(curves, per = 28) {
+  const pts = [];
+  for (const seg of curves) for (let i = 0; i <= per; i++) pts.push(sampleCubic(seg, i / per));
+  return pts;
+}
+const FLAT = {};
+for (const key of Object.keys(PROFILES)) {
+  FLAT[key] = {
+    upper: flatten(PROFILES[key].upper),
+    extra: PROFILES[key].extra.length ? flatten(PROFILES[key].extra) : null,
+    belt: flatten(BELT),
+  };
+}
+const FLAT_LOWER = { front: flatten(FRONT_LOWER), rear: flatten(REAR_LOWER), sill: flatten(SILL) };
+
+function makeGrain(alpha) {
+  const g = document.createElement('canvas');
+  g.width = g.height = 140;
+  const gc = g.getContext('2d');
+  const img = gc.createImageData(140, 140);
+  for (let i = 0; i < img.data.length; i += 4) {
+    const v = 108 + Math.random() * 148 | 0;
+    img.data[i] = img.data[i+1] = img.data[i+2] = v;
+    img.data[i+3] = alpha;
+  }
+  gc.putImageData(img, 0, 0);
+  return g;
+}
+const GRAIN = makeGrain(10);
+
+function rng(seed) {
+  let s = seed >>> 0;
+  return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296);
+}
+const easeOutQuint = (t) => 1 - Math.pow(1 - t, 5);
+const easeInOutCubic = (t) => t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3) / 2;
+const REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+function drawLitCurves(ctx, pts, box, lightX, tint, baseA, glowA, wBase, wGlow, alphaMul = 1, dx = 0, fadeFn = null) {
+  const [r, g, b] = tint;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const x1 = box.cx + dx + pts[i][0] * box.cw, y1 = box.cy + pts[i][1] * box.ch;
+    const x2 = box.cx + dx + pts[i+1][0] * box.cw, y2 = box.cy + pts[i+1][1] * box.ch;
+    const d = Math.abs((x1 + x2) / 2 - lightX) / (box.cw * 0.42);
+    const lit = Math.max(0, 1 - d * d);
+    let a = (baseA + glowA * lit) * alphaMul;
+    if (fadeFn) a *= fadeFn((y1 + y2) / 2);
+    if (a < 0.008) continue;
+    ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${a})`;
+    ctx.lineWidth = wBase + wGlow * lit;
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+  }
+}
+
+function drawBand(ctx, W, H, tint, lightX, alpha, width, tilt) {
+  const [r, g, b] = tint;
+  const topX = lightX - H * tilt;
+  const ang = Math.atan2(H, lightX - topX);
+  ctx.save();
+  ctx.translate(topX, 0);
+  ctx.rotate(ang - Math.PI / 2);
+  const bl = ctx.createLinearGradient(-width, 0, width, 0);
+  bl.addColorStop(0, `rgba(${r},${g},${b},0)`);
+  bl.addColorStop(0.5, `rgba(${r},${g},${b},${alpha})`);
+  bl.addColorStop(1, `rgba(${r},${g},${b},0)`);
+  ctx.fillStyle = bl;
+  ctx.fillRect(-width, -H * 0.2, width * 2, H * 1.9);
+  ctx.restore();
+}
+
+function drawDarkBg(ctx, W, H, bgTop, bgBottom) {
+  const bg = ctx.createLinearGradient(0, 0, 0, H);
+  bg.addColorStop(0, bgTop);
+  bg.addColorStop(1, bgBottom);
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+}
+
+const GRAIN_PAT = new WeakMap();   // context ごとにパターンを再利用(毎フレーム生成は高コスト)
+function drawVignetteGrain(ctx, W, H, t = 0) {
+  const vg = ctx.createRadialGradient(W/2, H*0.5, Math.min(W,H)*0.4, W/2, H*0.5, Math.max(W,H)*0.95);
+  vg.addColorStop(0, 'rgba(0,0,0,0)');
+  vg.addColorStop(1, 'rgba(4,4,6,0.5)');
+  ctx.fillStyle = vg;
+  ctx.fillRect(0, 0, W, H);
+  let pat = GRAIN_PAT.get(ctx);
+  if (!pat) { pat = ctx.createPattern(GRAIN, 'repeat'); GRAIN_PAT.set(ctx, pat); }
+  ctx.save();
+  ctx.globalAlpha = 0.5;
+  ctx.translate(-((t * 53) % 140), -((t * 31) % 140));
+  ctx.fillStyle = pat;
+  ctx.fillRect(0, 0, W + 140, H + 140);
+  ctx.restore();
+}
+
+/* ============================================================
+   静的シーン(カード媒体)。studio は描画進捗 progress に対応
+   ============================================================ */
+const TINT_NEUTRAL = [242, 236, 224];
+const TINT_DAWN = [214, 226, 238];
+const TINT_DUSK = [240, 216, 186];
+
+const SCENES = {
+  'story-tokiwa':   { type: 'model', profile: 'tokiwa',   tint: TINT_NEUTRAL, light: 0.42, zoom: 0.86, seed: 11 },
+  'story-akatsuki': { type: 'model', profile: 'akatsuki', tint: TINT_DAWN,    light: 0.60, zoom: 0.92, seed: 22 },
+  'story-yoi':      { type: 'model', profile: 'yoi',      tint: TINT_DUSK,    light: 0.30, zoom: 0.9,  seed: 33 },
+  'model-tokiwa':   { type: 'model', profile: 'tokiwa',   tint: TINT_NEUTRAL, light: 0.5,  zoom: 1.0,  seed: 44 },
+  'model-akatsuki': { type: 'model', profile: 'akatsuki', tint: TINT_DAWN,    light: 0.62, zoom: 1.0,  seed: 55 },
+  'model-yoi':      { type: 'model', profile: 'yoi',      tint: TINT_DUSK,    light: 0.36, zoom: 1.0,  seed: 66 },
+  'craft-metal':    { type: 'metal',   seed: 7 },
+  'craft-leather':  { type: 'leather', seed: 8 },
+  'studio-three':   { type: 'studio', cars: ['yoi', 'akatsuki', 'tokiwa'] },
+  'studio-one':     { type: 'studio', cars: ['tokiwa'] },
+};
+const drawProgress = new Map();   // canvas → 0..1(studio の線画進捗)
+
+function renderScene(canvas) {
+  const conf = SCENES[canvas.dataset.scene];
+  if (!conf) return;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const W = canvas.clientWidth, H = canvas.clientHeight;
+  if (!W || !H) return;
+  const bw = Math.round(W * dpr), bh = Math.round(H * dpr);
+  const sameSize = canvas.width === bw && canvas.height === bh;
+  // 寸法が変わらず、描画進捗のアニメーション中でもなければ再描画しない
+  // (leather は約2万個の弧を描くため、resize のたびに走らせると重い)
+  if (sameSize && canvas.dataset.rendered === '1' && !drawProgress.has(canvas)) return;
+  if (!sameSize) { canvas.width = bw; canvas.height = bh; }
+  canvas.dataset.rendered = '1';
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, W, H);
+
+  if (conf.type === 'model') {
+    const tint = conf.tint;
+    const lightX = W * conf.light;
+    drawDarkBg(ctx, W, H, '#191a1e', '#0c0c10');
+    drawBand(ctx, W, H, tint, lightX, 0.055, Math.max(70, W * 0.09), 0.30);
+    // 横長のカードでは幅ではなく高さを基準に car を収める(端が切れないように)
+    const wide = W / H > 1.9;
+    const cw = Math.min(W * 0.94, H * 1.9, 1200) * conf.zoom;
+    const box = { cw, ch: cw * 0.30, cx: W / 2 - cw * 0.48, cy: H * (wide ? 0.50 : 0.56) - cw * 0.15 };
+    const groundY = box.cy + box.ch * 1.04;
+    const [r, g, b] = tint;
+    const pool = ctx.createRadialGradient(lightX, groundY, 0, lightX, groundY, cw * 0.5);
+    pool.addColorStop(0, `rgba(${r},${g},${b},0.06)`);
+    pool.addColorStop(1, `rgba(${r},${g},${b},0)`);
+    ctx.save();
+    ctx.scale(1, 0.22);
+    ctx.translate(0, groundY / 0.22 - groundY);
+    ctx.fillStyle = pool;
+    ctx.fillRect(lightX - cw * 0.55, groundY - cw * 0.55, cw * 1.1, cw * 1.1);
+    ctx.restore();
+    ctx.lineCap = 'round';
+    const flat = FLAT[conf.profile];
+    drawLitCurves(ctx, flat.upper, box, lightX, tint, 0.05, 0.8, 0.7, 1.3);
+    if (flat.extra) drawLitCurves(ctx, flat.extra, box, lightX, tint, 0.05, 0.7, 0.7, 1.1);
+    drawLitCurves(ctx, flat.belt, box, lightX, tint, 0.035, 0.5, 0.55, 1.0);
+    const rand = rng(conf.seed);
+    for (let i = 0; i < 26; i++) {
+      const px = rand() * W, py = rand() * H;
+      const vis = Math.max(0, 1 - Math.abs(px - lightX) / (W * 0.16));
+      if (vis < 0.05) continue;
+      ctx.fillStyle = `rgba(${r},${g},${b},${0.14 * vis * (0.4 + rand() * 0.6)})`;
+      ctx.beginPath(); ctx.arc(px, py, 0.5 + rand() * 1.0, 0, Math.PI * 2); ctx.fill();
+    }
+    drawVignetteGrain(ctx, W, H);
+
+  } else if (conf.type === 'metal') {
+    const bg = ctx.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0, '#17181b'); bg.addColorStop(0.55, '#101114'); bg.addColorStop(1, '#0a0b0d');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+    const rand = rng(conf.seed);
+    for (let i = 0; i < 150; i++) {
+      const y = rand() * H;
+      const len = W * (0.15 + rand() * 0.5);
+      const x = rand() * (W - len);
+      const a = 0.012 + rand() * 0.05;
+      const gr = ctx.createLinearGradient(x, 0, x + len, 0);
+      gr.addColorStop(0, 'rgba(220, 222, 228, 0)');
+      gr.addColorStop(0.5, `rgba(220, 222, 228, ${a})`);
+      gr.addColorStop(1, 'rgba(220, 222, 228, 0)');
+      ctx.strokeStyle = gr;
+      ctx.lineWidth = 0.7 + rand() * 0.8;
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + len, y + (rand() - 0.5) * 3); ctx.stroke();
+    }
+    ctx.lineCap = 'round';
+    for (let i = 0; i < 60; i++) {
+      const t = i / 59;
+      const x = W * (0.06 + t * 0.88);
+      const y = H * (0.62 - Math.sin(t * Math.PI) * 0.18);
+      const lit = Math.sin(t * Math.PI);
+      ctx.strokeStyle = `rgba(238, 236, 228, ${0.10 + 0.55 * lit})`;
+      ctx.lineWidth = 1 + 1.6 * lit;
+      const x2 = W * (0.06 + (t + 1/59) * 0.88);
+      const y2 = H * (0.62 - Math.sin((t + 1/59) * Math.PI) * 0.18);
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x2, y2); ctx.stroke();
+    }
+    drawVignetteGrain(ctx, W, H);
+
+  } else if (conf.type === 'leather') {
+    const bg = ctx.createLinearGradient(0, 0, W, H);
+    bg.addColorStop(0, '#241b15'); bg.addColorStop(0.6, '#1a130e'); bg.addColorStop(1, '#120d09');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+    const rand = rng(conf.seed);
+    const hlx = W * 0.38, hly = H * 0.34;
+    for (let y = 0; y < H; y += 6) {
+      for (let x = 0; x < W; x += 6) {
+        const jx = x + (rand() - 0.5) * 6, jy = y + (rand() - 0.5) * 6;
+        const dist = Math.hypot(jx - hlx, jy - hly) / (Math.max(W, H) * 0.7);
+        const glow = Math.max(0, 1 - dist);
+        const a = 0.02 + glow * glow * 0.09 * rand();
+        ctx.fillStyle = `rgba(226, 200, 170, ${a})`;
+        ctx.beginPath(); ctx.arc(jx, jy, 0.6 + rand() * 0.7, 0, Math.PI * 2); ctx.fill();
+      }
+    }
+    const sheen = ctx.createRadialGradient(hlx, hly, 0, hlx, hly, Math.max(W, H) * 0.55);
+    sheen.addColorStop(0, 'rgba(233, 209, 178, 0.14)');
+    sheen.addColorStop(1, 'rgba(233, 209, 178, 0)');
+    ctx.fillStyle = sheen; ctx.fillRect(0, 0, W, H);
+    drawVignetteGrain(ctx, W, H);
+
+  } else if (conf.type === 'studio') {
+    const progress = drawProgress.has(canvas) ? drawProgress.get(canvas) : 1;
+    const bg = ctx.createLinearGradient(0, 0, 0, H);
+    bg.addColorStop(0, '#f2f2f3'); bg.addColorStop(0.62, '#e4e4e6'); bg.addColorStop(1, '#d2d2d5');
+    ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+    const n = conf.cars.length;
+    // 奥から手前へ、左上→右下の対角に並べる(重なりが「奥行き」に見えるだけの間隔をとる)
+    const LAYOUT = n === 1
+      ? [{ dx: 0, scale: 1, alpha: 0.85 }]
+      : [{ dx: -0.52, scale: 0.70, alpha: 0.26 }, { dx: -0.02, scale: 0.84, alpha: 0.46 }, { dx: 0.48, scale: 1, alpha: 0.82 }];
+    const baseCw = n === 1 ? Math.min(W * 0.56, 820) : Math.min(W * 0.50, 720);
+    conf.cars.forEach((name, i) => {
+      const depth = n - 1 - i;
+      const lay = LAYOUT[i] || LAYOUT[LAYOUT.length - 1];
+      const cw = baseCw * lay.scale;
+      const box = {
+        cw, ch: cw * 0.30,
+        cx: W * 0.5 - cw * 0.5 + lay.dx * baseCw,
+        cy: H * (0.62 - depth * 0.115) - cw * 0.15,
+      };
+      const groundY = box.cy + box.ch * 0.99;
+      // 各車は progress の連続窓で順に描かれる(奥から)
+      const p = Math.max(0, Math.min(1, progress * (n * 0.62 + 0.38) - i * 0.62 * (n > 1 ? 1 : 0)));
+      if (p <= 0) return;
+      // 影
+      const sh = ctx.createRadialGradient(box.cx + cw * 0.5, groundY, 0, box.cx + cw * 0.5, groundY, cw * 0.55);
+      sh.addColorStop(0, `rgba(30, 30, 34, ${(0.05 + lay.alpha * 0.13) * p})`);
+      sh.addColorStop(1, 'rgba(30, 30, 34, 0)');
+      ctx.save();
+      ctx.scale(1, 0.16);
+      ctx.translate(0, groundY / 0.16 - groundY);
+      ctx.fillStyle = sh;
+      ctx.fillRect(box.cx - cw * 0.1, groundY - cw * 0.6, cw * 1.2, cw * 1.2);
+      ctx.restore();
+      // 線画(p で各ストロークをクリップ)
+      ctx.strokeStyle = `rgba(38, 38, 42, ${lay.alpha})`;
+      ctx.lineCap = 'round';
+      const drawPts = (pts, w) => {
+        const nPts = Math.max(2, Math.ceil(pts.length * p));
+        ctx.lineWidth = w;
+        ctx.beginPath();
+        for (let j = 0; j < nPts; j++) {
+          const X = box.cx + pts[j][0] * box.cw, Y = box.cy + pts[j][1] * box.ch;
+          j ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y);
+        }
+        ctx.stroke();
+      };
+      const flat = FLAT[name];
+      drawPts(flat.upper, 1.6);
+      if (flat.extra) drawPts(flat.extra, 1.4);
+      drawPts(flat.belt, 1.3);
+      drawPts(FLAT_LOWER.front, 1.2);
+      drawPts(FLAT_LOWER.rear, 1.2);
+      drawPts(FLAT_LOWER.sill, 1.1);
+      for (const wx of [0.255, 0.775]) {
+        const R = box.ch * 0.17;
+        const X = box.cx + wx * box.cw, Y = groundY - R;
+        ctx.lineWidth = 1.4;
+        ctx.beginPath(); ctx.arc(X, Y, R, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * p); ctx.stroke();
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.arc(X, Y, R * 0.28, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * p); ctx.stroke();
+      }
+    });
+  }
+}
+
+function renderAllScenes() {
+  document.querySelectorAll('canvas.scene').forEach(renderScene);
+}
+
+/* ============================================================
+   ヒーロー:CGスライドショー
+   - animT(再生中のみ進む時間軸)で一時停止と完全同期
+   - 主光帯26s+逆行の返し光41s(互いに素=同じ画が再来しない)
+   - 9s周期の呼吸、スライド別の光の癖(lightBias)
+   - 1.6s の3層トランジション(ドリフト+スウェル+eased クロスフェード)
+   - 床反射、遠近2層の塵、下部18%の粒子減光
+   ============================================================ */
+(() => {
+  const canvas = document.getElementById('heroCanvas');
+  const ctx = canvas.getContext('2d');
+  let W = 0, H = 0;
+
+  const SLIDES = [
+    { key: 'tokiwa',   eyebrow: 'A Museum of Hours', title: '常磐 TOKIWA',  tint: TINT_NEUTRAL, bias: 0.50 },
+    { key: 'akatsuki', eyebrow: '夜明けという時刻',   title: '暁 AKATSUKI', tint: TINT_DAWN,    bias: 0.42 },
+    { key: 'yoi',      eyebrow: '日暮れという時刻',   title: '宵 YOI',      tint: TINT_DUSK,    bias: 0.58 },
+  ];
+  const SLIDE_DUR = 8, BLEND_DUR = 1.6;
+  let current = 0, prev = -1, blend = 1;
+  let playing = !REDUCED.matches;
+  let animT = 0, acc = 0, last = 0;
+  let introT = 0;                        // ロード時「照明が点く」ランプ
+  let scrollDim = 0;                     // スクロール退場の減光
+
+  const copyEl = document.getElementById('heroCopy');
+  const elEyebrow = document.getElementById('heroEyebrow');
+  const elTitle = document.getElementById('heroTitle');
+  const pauseBtn = document.getElementById('heroPause');
+  const progressEl = document.getElementById('heroProgress');
+  const bars = [...progressEl.querySelectorAll('button')];
+
+  function resize() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    if (!w || !h) return;
+    const bw = Math.round(w * dpr), bh = Math.round(h * dpr);
+    // 同じ値でも代入するとバックストアが消えて一瞬黒くなる。寸法が変わった時だけ触る
+    if (canvas.width === bw && canvas.height === bh) return;
+    W = w; H = h;
+    canvas.width = bw; canvas.height = bh;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (!playing) draw();
+  }
+  window.addEventListener('resize', resize);
+
+  const dustFar = Array.from({ length: 36 }, () => ({
+    x: Math.random(), y: Math.random(),
+    r: 0.4 + Math.random() * 0.5,
+    vy: -(0.003 + Math.random() * 0.003),
+    ph: Math.random() * Math.PI * 2,
+  }));
+  const dustNear = Array.from({ length: 20 }, () => ({
+    x: Math.random(), y: Math.random(),
+    r: 1.0 + Math.random() * 0.8,
+    vy: -(0.006 + Math.random() * 0.005),
+    ph: Math.random() * Math.PI * 2,
+  }));
+
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const mixTint = (t1, t2, t) => [lerp(t1[0], t2[0], t), lerp(t1[1], t2[1], t), lerp(t1[2], t2[2], t)];
+
+  function draw() {
+    const slide = SLIDES[current];
+    const prevSlide = prev >= 0 ? SLIDES[prev] : slide;
+    const e = easeInOutCubic(blend);
+    const tint = mixTint(prevSlide.tint, slide.tint, e);
+    const bias = lerp(prevSlide.bias, slide.bias, e);
+    const [r, g, b] = tint;
+
+    // 照明のランプ(ロード)と呼吸
+    const intro = easeOutQuint(Math.min(1, introT / 1.4));
+    const introCurves = easeOutQuint(Math.max(0, Math.min(1, (introT - 0.3) / 1.1)));
+    let env = (1 + 0.05 * Math.sin(animT * Math.PI * 2 / 9)) * intro;
+    // 切替スウェル
+    if (blend < 1) env += 0.12 * Math.sin(Math.PI * Math.min(1, blend / 0.31)) * intro;
+
+    // 主光帯(26s)+スライドの癖
+    const ph = 0.5 + 0.5 * Math.sin(animT * Math.PI * 2 / 26 - Math.PI / 2);
+    const lightX = W * ((0.16 + bias - 0.5) + ph * 0.64);
+    // 返し光(41s・逆行)
+    const ph2 = 0.5 + 0.5 * Math.sin(-animT * Math.PI * 2 / 41);
+    const lightX2 = W * (0.22 + ph2 * 0.56);
+
+    drawDarkBg(ctx, W, H, '#1a1b1f', '#0b0b0e');
+    drawBand(ctx, W, H, tint, lightX2, 0.022 * env, W * 0.14, 0.22);
+    drawBand(ctx, W, H, tint, lightX, 0.06 * env, Math.max(70, W * 0.09), 0.36);
+
+    const cw = Math.min(W * 0.72, 1150);
+    const box = { cw, ch: cw * 0.30, cx: W * 0.56 - cw * 0.5, cy: H * 0.47 - cw * 0.15 };
+    const groundY = box.cy + box.ch * 1.04;
+
+    const pool = ctx.createRadialGradient(lightX, groundY, 0, lightX, groundY, cw * 0.5);
+    pool.addColorStop(0, `rgba(${r},${g},${b},${0.05 * env})`);
+    pool.addColorStop(1, `rgba(${r},${g},${b},0)`);
+    ctx.save();
+    ctx.scale(1, 0.2);
+    ctx.translate(0, groundY / 0.2 - groundY);
+    ctx.fillStyle = pool;
+    ctx.fillRect(lightX - cw * 0.55, groundY - cw * 0.55, cw * 1.1, cw * 1.1);
+    ctx.restore();
+
+    // 稜線(トランジション中は擬似カメラパンのドリフト)
+    ctx.lineCap = 'round';
+    const outDx = 0.010 * cw * e;
+    const inDx = -0.010 * cw * (1 - easeOutQuint(blend));
+    const drawProfile = (key, mul, dx) => {
+      const flat = FLAT[key];
+      drawLitCurves(ctx, flat.upper, box, lightX, tint, 0.035, 0.75, 0.7, 1.2, mul * introCurves, dx);
+      if (flat.extra) drawLitCurves(ctx, flat.extra, box, lightX, tint, 0.035, 0.65, 0.7, 1.0, mul * introCurves, dx);
+      drawLitCurves(ctx, flat.belt, box, lightX, tint, 0.025, 0.48, 0.55, 0.95, mul * introCurves, dx);
+    };
+    // 反射は線分ごとに減衰させる(不透明な塗りで隠すと床に継ぎ目が出るため)
+    const reflFade = (y) => Math.max(0, 1 - (groundY - y) / (box.ch * 0.9));
+    const drawReflection = (key, mul, dx) => {
+      ctx.save();
+      ctx.translate(0, groundY * 2);
+      ctx.scale(1, -1);
+      const flat = FLAT[key];
+      drawLitCurves(ctx, flat.upper, box, lightX, tint, 0.004, 0.075, 1.3, 1.8, mul * introCurves, dx, reflFade);
+      if (flat.extra) drawLitCurves(ctx, flat.extra, box, lightX, tint, 0.004, 0.065, 1.3, 1.6, mul * introCurves, dx, reflFade);
+      ctx.restore();
+    };
+    if (blend < 1 && prev >= 0) { drawProfile(prevSlide.key, 1 - e, outDx); drawReflection(prevSlide.key, 1 - e, outDx); }
+    drawProfile(slide.key, e, inDx);
+    drawReflection(slide.key, e, inDx);
+
+    // 塵(遠近2層。下部18%は減光)
+    const drawDust = (arr, visW, aMul, twHz) => {
+      for (const d of arr) {
+        if (playing) {
+          d.y += d.vy / 60;
+          if (arr === dustNear) d.x += 0.004 * Math.sin(animT * 0.4 + d.ph) / 60;
+          if (d.y < -0.02) { d.y = 1.02; d.x = Math.random(); }
+        }
+        const px = d.x * W, py = d.y * H;
+        let vis = Math.max(0, 1 - Math.abs(px - lightX) / (W * visW));
+        if (vis <= 0.03) continue;
+        if (py > H * 0.82) vis *= 0.5;
+        const tw = 0.5 + 0.5 * Math.sin(animT * twHz + d.ph);
+        ctx.fillStyle = `rgba(${r},${g},${b},${0.15 * vis * tw * aMul * env})`;
+        ctx.beginPath(); ctx.arc(px, py, d.r, 0, Math.PI * 2); ctx.fill();
+      }
+    };
+    drawDust(dustFar, 0.13, 0.6, 1.2);
+    drawDust(dustNear, 0.16, 1.0, 0.7);
+
+    drawVignetteGrain(ctx, W, H, animT);
+
+    // スクロール退場の減光
+    if (scrollDim > 0.005) {
+      ctx.fillStyle = `rgba(8, 8, 11, ${scrollDim * 0.35})`;
+      ctx.fillRect(0, 0, W, H);
+    }
+  }
+
+  const elCta = document.getElementById('heroCta');
+  const syncCta = () => elCta.setAttribute('aria-label', SLIDES[current].title + ' を詳しく見る');
+
+  function updateBars() {
+    bars.forEach((btn, i) => {
+      btn.classList.toggle('past', i < current);
+      if (i === current) btn.setAttribute('aria-current', 'true');
+      else btn.removeAttribute('aria-current');
+      const fill = btn.querySelector('.fill');
+      if (i < current) fill.style.transform = 'scaleX(1)';
+      else if (i > current) fill.style.transform = 'scaleX(0)';
+    });
+  }
+
+  let copyTimer = 0;
+  function setSlide(idx) {
+    if (idx === current) return;
+    prev = current; current = idx; blend = 0; acc = 0;
+    document.body.classList.add('hero-settled');
+    copyEl.classList.add('exit');
+    clearTimeout(copyTimer);   // 連打時に前回のタイマーが後から発火して演出が壊れるのを防ぐ
+    copyTimer = setTimeout(() => {
+      elEyebrow.textContent = SLIDES[current].eyebrow;
+      elTitle.textContent = SLIDES[current].title;
+      syncCta();
+      copyEl.classList.remove('exit');
+      copyEl.classList.add('enter');
+      void copyEl.offsetHeight;              // 強制リフローで初期状態を確定
+      copyEl.classList.remove('enter');      // rAFに委ねない(描画停止中に文字が隠れたままになるため)
+    }, 460);
+    updateBars();
+  }
+
+  // 静かなシーンなので 30fps で十分。描画コストを半分に抑える
+  const FRAME = 1 / 30;
+  let sinceDraw = 0;
+
+  function loop(now) {
+    const t = now / 1000;
+    const dt = last ? Math.min(0.1, t - last) : 0;
+    last = t;
+    if (!document.hidden) {
+      if (playing) {
+        animT += dt;
+        acc += dt;
+        introT += dt;
+        if (acc > SLIDE_DUR) setSlide((current + 1) % SLIDES.length);
+      }
+      if (blend < 1) blend = Math.min(1, blend + dt / BLEND_DUR);
+      sinceDraw += dt;
+      if (sinceDraw >= FRAME || dt === 0) {
+        sinceDraw = 0;
+        draw();
+        const fill = bars[current].querySelector('.fill');
+        fill.style.transform = `scaleX(${Math.min(1, acc / SLIDE_DUR)})`;
+      }
+    }
+    requestAnimationFrame(loop);
+  }
+
+  resize();
+  updateBars();
+  if (REDUCED.matches) {
+    playing = false;
+    introT = 2; blend = 1;
+    pauseBtn.classList.add('paused');
+    pauseBtn.setAttribute('aria-pressed', 'true');
+    bars[0].querySelector('.fill').style.transform = 'scaleX(1)';
+    syncCta();
+    draw();
+    requestAnimationFrame(loop);   // 再生ボタンで動かせるようループ自体は回す
+  } else {
+    requestAnimationFrame(loop);
+  }
+
+  // トグルボタンはラベルを動作対象で固定し、状態は aria-pressed だけで表す
+  pauseBtn.addEventListener('click', () => {
+    playing = !playing;
+    pauseBtn.classList.toggle('paused', !playing);
+    pauseBtn.setAttribute('aria-pressed', String(!playing));
+    if (playing && acc > SLIDE_DUR - 1.5) acc = SLIDE_DUR - 1.5;   // 再開直後の即切替を防ぐ
+  });
+
+  bars.forEach((btn, i) => btn.addEventListener('click', () => setSlide(i)));
+  progressEl.addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    e.preventDefault();
+    const n = (current + (e.key === 'ArrowRight' ? 1 : -1) + SLIDES.length) % SLIDES.length;
+    setSlide(n);
+    bars[n].focus();
+  });
+
+  document.addEventListener('visibilitychange', () => { last = 0; });
+
+  // スクロール退場(照明が落ちながら文字が沈む)
+  window.addEventListener('scroll', () => {
+    if (REDUCED.matches) return;
+    const y = window.scrollY;
+    if (y > H * 1.2) return;
+    const p = Math.min(1, y / (H * 0.6 || 1));
+    scrollDim = p;
+    copyEl.style.opacity = String(1 - p);
+    copyEl.style.transform = `translateY(${p * 40}px)`;
+    progressEl.style.opacity = String(1 - p * 1.4);
+    // 見えなくなったらフォーカスも取れなくする(不可視のリングだけが動くのを防ぐ)
+    const gone = p >= 0.995;
+    copyEl.inert = gone; progressEl.inert = gone; pauseBtn.inert = gone;
+  }, { passive: true });
+
+  // 表示中に「視差効果を減らす」へ切り替えられた場合も止める
+  REDUCED.addEventListener('change', (e) => {
+    if (!e.matches || !playing) return;
+    playing = false;
+    pauseBtn.classList.add('paused');
+    pauseBtn.setAttribute('aria-pressed', 'true');
+    scrollDim = 0;
+    copyEl.style.opacity = ''; copyEl.style.transform = '';
+    progressEl.style.opacity = '';
+    draw();
+  });
+})();
+
+/* ============================================================
+   スクロールリビール(ラッチ式・位置計算)+ 線画の描画進捗
+   ============================================================ */
+(() => {
+  let revealables = [...document.querySelectorAll('.rv')];
+
+  function animateDraw(container) {
+    const canvas = container.querySelector('canvas.scene');
+    if (!canvas) return;
+    if (REDUCED.matches) { drawProgress.set(canvas, 1); renderScene(canvas); return; }
+    const t0 = performance.now();
+    const DUR = 1600;
+    drawProgress.set(canvas, 0);
+    (function step(now) {
+      const p = Math.min(1, (now - t0) / DUR);
+      drawProgress.set(canvas, easeOutQuint(p));
+      renderScene(canvas);
+      if (p < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+
+  function checkReveals() {
+    if (!revealables.length) return;
+    const vh = window.innerHeight;
+    revealables = revealables.filter((el) => {
+      if (el.getBoundingClientRect().top >= vh * 0.86) return true;
+      el.classList.add('on');
+      if (el.hasAttribute('data-draw')) animateDraw(el);
+      // スタッガー用の遅延を残すとホバーが遅れて反応するので、出終わったら外す
+      if (el.classList.contains('card')) {
+        const settle = () => el.classList.add('settled');
+        el.addEventListener('transitionend', settle, { once: true });
+        setTimeout(settle, 1600);
+      }
+      return false;   // 一度出たら二度と走査しない
+    });
+  }
+
+  // 線画キャンバスはリビール前は空白(progress 0)で待機
+  document.querySelectorAll('[data-draw] canvas.scene').forEach((c) => {
+    if (!REDUCED.matches) drawProgress.set(c, 0);
+  });
+
+  // rAF に委ねない(描画が止まっている環境で本文が出ないままになる)。
+  // 出終わった要素は配列から外すので、全部出たあとの走査コストはゼロになる
+  window.addEventListener('scroll', checkReveals, { passive: true });
+  window.addEventListener('resize', checkReveals);
+  window.__checkReveals = checkReveals;
+})();
+
+/* ============================================================
+   ヘッダー / ドロワー / 初期化
+   ============================================================ */
+(() => {
+  const head = document.getElementById('siteHead');
+  let lastY = window.scrollY, anchorY = lastY, goingDown = false;
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    document.body.classList.toggle('scrolled', y > 40);
+    const nowDown = y > lastY;
+    if (nowDown !== goingDown) { anchorY = lastY; goingDown = nowDown; }
+    if (y < 140) head.classList.remove('hidden');
+    else if (goingDown && y - anchorY > 24) head.classList.add('hidden');
+    else if (!goingDown && anchorY - y > 12) head.classList.remove('hidden');
+    lastY = y;
+  }, { passive: true });
+
+  const menuBtn = document.getElementById('menuBtn');
+  const drawerClose = document.getElementById('drawerClose');
+  const backdrop = document.getElementById('drawerBackdrop');
+  const drawer = document.getElementById('drawer');
+  let lastFocused = null;
+  const setDrawer = (open) => {
+    if (open) lastFocused = document.activeElement;
+    document.body.classList.toggle('drawer-open', open);
+    menuBtn.setAttribute('aria-expanded', String(open));
+    document.documentElement.style.overflow = open ? 'hidden' : '';
+    if (open) {
+      drawerClose.focus();
+    } else {
+      // 開く前の位置へ戻す。取れていなければ開閉ボタンへ
+      const back = (lastFocused && lastFocused !== document.body) ? lastFocused : menuBtn;
+      back.focus();
+      lastFocused = null;
+    }
+  };
+  menuBtn.addEventListener('click', () => setDrawer(true));
+  drawerClose.addEventListener('click', () => setDrawer(false));
+  backdrop.addEventListener('click', () => setDrawer(false));
+  drawer.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setDrawer(false)));
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && document.body.classList.contains('drawer-open')) setDrawer(false);
+  });
+  // 開いている間は Tab をドロワー内に閉じ込める
+  drawer.addEventListener('keydown', (e) => {
+    if (e.key !== 'Tab') return;
+    const f = [...drawer.querySelectorAll('button, a[href]')];
+    if (!f.length) return;
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  });
+
+  renderAllScenes();
+  let rz;
+  window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(renderAllScenes, 150); });
+  window.addEventListener('load', () => { renderAllScenes(); window.__checkReveals(); });
+
+  const y = document.getElementById('year');
+  if (y) y.textContent = new Date().getFullYear();
+
+  // 収蔵継承車の絞り込み。読みの揺れ(かな・ローマ字)も拾う
+  const hForm = document.getElementById('heritageSearch');
+  const hQuery = document.getElementById('heritageQuery');
+  const hItems = [...document.querySelectorAll('.heritage-item')];
+  const hNote = document.getElementById('heritageNote');
+  const hEmpty = document.getElementById('heritageEmpty');
+  const ALIAS = {
+    '常磐 TOKIWA': ['常磐', 'ときわ', 'トキワ', 'tokiwa'],
+    '暁 AKATSUKI': ['暁', 'あかつき', 'アカツキ', 'akatsuki'],
+    '宵 YOI': ['宵', 'よい', 'ヨイ', 'yoi'],
+  };
+  function filterHeritage() {
+    const q = hQuery.value.trim().toLowerCase();
+    let hit = 0;
+    for (const li of hItems) {
+      const name = li.dataset.name;
+      const match = !q || (ALIAS[name] || []).some((a) => a.toLowerCase().includes(q) || q.includes(a.toLowerCase()));
+      li.hidden = !match;
+      if (match) hit++;
+    }
+    hEmpty.hidden = hit > 0;
+    hNote.textContent = q
+      ? `「${hQuery.value.trim()}」に該当する収蔵継承車は${hit}台です。`
+      : '現在の収蔵継承車は3台。ご案内は面談の後、予約制にて承ります。';
+  }
+  hForm.addEventListener('submit', (e) => { e.preventDefault(); filterHeritage(); });
+  hQuery.addEventListener('input', filterHeritage);
+
+  // 初回ロードの振り付け開始。強制リフローで初期状態を確定させてから解除する
+  // (rAFに委ねると、描画が止まっている環境で文字が隠れたままになる)
+  void document.body.offsetHeight;
+  document.body.classList.add('is-loaded');
+  window.__checkReveals();
+})();
+</script>
+</body>
+</html>
