@@ -363,10 +363,11 @@
      ============================================================ */
   .section { padding: clamp(56px, 8vw, 104px) clamp(16px, 3.4vw, 48px); }
   .container { max-width: 1400px; margin: 0 auto; }
+  /* 見出しはラテン文字。大字の漢字は使わず、字間を開けた大文字で標題として組む */
   .section-title {
-    font-size: clamp(26px, 3.4vw, 42px); font-weight: 700;
-    font-feature-settings: "palt"; letter-spacing: 0.02em;
-    line-height: 1.3; text-wrap: balance;
+    font-size: clamp(21px, 2.5vw, 33px); font-weight: 400;
+    letter-spacing: 0.14em; text-indent: 0.14em; text-transform: uppercase;
+    line-height: 1.35; text-wrap: balance;
   }
   .section-title::after {
     content: ""; display: block; width: 48px; height: 1px;
@@ -374,6 +375,45 @@
   }
   .section-title.centered { text-align: center; }
   .section-title.centered::after { margin-inline: auto; }
+
+  /* 章のローマ数字。台帳の章立てを示す */
+  .numeral {
+    display: block; font-size: 13px; font-weight: 400;
+    letter-spacing: 0.24em; text-indent: 0.24em;
+    color: #9a9aa0; margin-bottom: 16px;
+  }
+  .range .numeral, .owners .numeral { color: rgba(255,255,255,0.42); }
+
+  /* ============================================================
+     宣言帯 ─ 全面の闇に、絶対の一行だけを置く
+     ============================================================ */
+  .decree {
+    position: relative; background: #010205; color: #fff; overflow: hidden;
+    padding: clamp(90px, 15vh, 190px) clamp(16px, 3.4vw, 48px);
+    text-align: center;
+  }
+  .decree canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .decree .container { position: relative; }
+  .decree p {
+    font-size: clamp(20px, 4vw, 58px); font-weight: 200;
+    letter-spacing: 0.2em; text-indent: 0.2em; line-height: 1.5;
+    text-wrap: balance;
+  }
+  .decree .roman {
+    display: block; margin-top: 30px;
+    font-size: clamp(30px, 7vw, 96px); font-weight: 200;
+    letter-spacing: 0.24em; text-indent: 0.24em;
+    color: rgba(255,255,255,0.30);
+  }
+  .decree .foot {
+    margin-top: 34px; font-size: 11.5px; letter-spacing: 0.34em; text-indent: 0.34em;
+    color: rgba(255,255,255,0.42);
+  }
+
+  /* 封蝋の印。台帳が「閉じられた記録」であることの標 */
+  /* 親が縦方向のフレックスになる場合があるので、両軸で中央に寄せる */
+  .seal-wrap { display: flex; justify-content: center; align-items: center; margin-top: clamp(40px, 6vw, 68px); }
+  .seal { width: 132px; height: 132px; display: block; }
 
   /* スクロールリビール(ラッチ式) */
   .js .rv { opacity: 0; transform: translateY(var(--rise)); }
@@ -711,7 +751,7 @@
     padding: 9px 0; border-bottom: 1px solid rgba(1,2,5,0.07);
     font-size: 13.5px; line-height: 1.8;
   }
-  .verify-list .n { color: #9a9aa0; font-size: 12px; }
+  .verify-list .n { color: #9a9aa0; font-size: 11px; font-family: var(--mono); letter-spacing: 0.06em; }
   .verify-decline {
     margin-top: 34px; padding: 22px 26px; background: #fff;
     border: 1px solid rgba(1,2,5,0.10); max-width: 46em;
@@ -947,9 +987,9 @@
     </video>
     -->
     <div class="hero-copy" id="heroCopy">
-      <p class="hero-eyebrow line"><span class="line-inner" id="heroEyebrow">台帳 №004 ── 継承済 2023年</span></p>
-      <p class="hero-title line" aria-live="polite"><span class="line-inner" id="heroTitle">1967 常磐 TOKIWA</span></p>
-      <p class="line" style="margin:0"><span class="line-inner"><a class="cta" id="heroCta" href="#registry">台帳を読む</a></span></p>
+      <p class="hero-eyebrow line"><span class="line-inner" id="heroEyebrow">Ledger No. IV &middot; Sealed MMXXIII</span></p>
+      <p class="hero-title line" aria-live="polite"><span class="line-inner" id="heroTitle">1967 TOKIWA</span></p>
+      <p class="line" style="margin:0"><span class="line-inner"><a class="cta" id="heroCta" href="#registry">Read the Ledger</a></span></p>
     </div>
     <div class="hero-progress" id="heroProgress" role="group" aria-label="モデルの切り替え">
       <button type="button" aria-label="台帳 №004 常磐 TOKIWA を表示" aria-current="true"><span class="fill"></span></button>
@@ -1000,8 +1040,8 @@
   <!-- ================= 台帳 ================= -->
   <section class="stories section" id="ledger" aria-label="台帳">
     <div class="container">
-      <h2 class="section-title rv">一台に、一冊。車とともに、次の所有者へ渡ります。</h2>
-      <p class="lead rv" style="max-width:42em;margin-top:14px;color:#45454c;line-height:1.9">台帳は、その個体について当社が確認しえた事実だけを綴じた記録簿です。推測は書きません。裏付けの取れなかった伝聞は、取れなかったと明記します。所有者が代わるたび、車とともに引き継がれます。</p>
+      <h2 class="section-title rv"><span class="numeral">I</span>The Ledger</h2>
+      <p class="lead rv" style="max-width:42em;margin-top:14px;color:#45454c;line-height:1.9">一台に、一冊。車とともに、次の所有者へ渡ります。台帳は、その個体について当社が確認しえた事実だけを綴じた記録簿です。推測は書きません。裏付けの取れなかった伝聞は、取れなかったと明記します。所有者が代わるたび、車とともに引き継がれます。</p>
     </div>
     <div class="container" style="margin-top:clamp(32px,5vw,52px)">
       <a class="card story-card rv" style="--i:0" href="#registry">
@@ -1020,26 +1060,40 @@
         <span class="card-arrow" aria-hidden="true"><span class="glyph">→</span></span>
       </a>
     </div>
+    <div class="container seal-wrap rv">
+      <canvas class="seal" id="sealCanvas" role="img" aria-label="バーテックスドライブの検証印"></canvas>
+    </div>
+  </section>
+
+
+  <!-- ================= 宣言 ================= -->
+  <section class="decree" aria-label="総生産台数">
+    <canvas id="decreeCanvas" aria-hidden="true"></canvas>
+    <div class="container">
+      <p>Seventy-eight were made.<br>No more will ever be.</p>
+      <span class="roman" aria-hidden="true">LXXVIII</span>
+      <p class="foot">MCMLXI &mdash; MCMLXXIV</p>
+    </div>
   </section>
 
   <!-- ================= 十二の照合 ================= -->
   <section class="verify section" id="verify">
     <div class="container">
-      <h2 class="section-title rv">十二の照合と、辞退の記録。</h2>
-      <p class="lead rv" style="max-width:40em;margin-top:14px;color:#45454c;line-height:1.9">台帳を発行するかどうかは、次の十二項目がすべて揃ったときにだけ決めます。一つでも埋まらなければ、発行しません。</p>
+      <h2 class="section-title rv"><span class="numeral">II</span>The Twelve</h2>
+      <p class="lead rv" style="max-width:40em;margin-top:14px;color:#45454c;line-height:1.9">十二の照合と、辞退の記録。台帳を発行するかどうかは、次の十二項目がすべて揃ったときにだけ決めます。一つでも埋まらなければ、発行しません。</p>
       <ol class="verify-list rv">
-        <li><span class="n">一</span><span>車台番号の打刻照合</span></li>
-        <li><span class="n">二</span><span>機関番号と製造元出荷記録の突合</span></li>
-        <li><span class="n">三</span><span>原設計図との寸法照合</span></li>
-        <li><span class="n">四</span><span>外板の板厚計測</span></li>
-        <li><span class="n">五</span><span>塗膜断面の層数と成分</span></li>
-        <li><span class="n">六</span><span>鋳造刻印の年号</span></li>
-        <li><span class="n">七</span><span>主要部品の品番と製造年</span></li>
-        <li><span class="n">八</span><span>初度登録原簿の取得</span></li>
-        <li><span class="n">九</span><span>所有の連なりの追跡</span></li>
-        <li><span class="n">十</span><span>通関・輸出入書類の確認</span></li>
-        <li><span class="n">十一</span><span>過去の整備記録の収集</span></li>
-        <li><span class="n">十二</span><span>距離計の読みと書類日付の整合</span></li>
+        <li><span class="n">I</span><span>車台番号の打刻照合</span></li>
+        <li><span class="n">II</span><span>機関番号と製造元出荷記録の突合</span></li>
+        <li><span class="n">III</span><span>原設計図との寸法照合</span></li>
+        <li><span class="n">IV</span><span>外板の板厚計測</span></li>
+        <li><span class="n">V</span><span>塗膜断面の層数と成分</span></li>
+        <li><span class="n">VI</span><span>鋳造刻印の年号</span></li>
+        <li><span class="n">VII</span><span>主要部品の品番と製造年</span></li>
+        <li><span class="n">VIII</span><span>初度登録原簿の取得</span></li>
+        <li><span class="n">IX</span><span>所有の連なりの追跡</span></li>
+        <li><span class="n">X</span><span>通関・輸出入書類の確認</span></li>
+        <li><span class="n">XI</span><span>過去の整備記録の収集</span></li>
+        <li><span class="n">XII</span><span>距離計の読みと書類日付の整合</span></li>
       </ol>
       <div class="verify-decline rv">
         <dl class="row">
@@ -1055,7 +1109,7 @@
   <!-- ================= 発行済台帳(レジストリー) ================= -->
   <section class="registry section" id="registry">
     <div class="container">
-      <h2 class="section-title rv">発行済台帳</h2>
+      <h2 class="section-title rv"><span class="numeral">III</span>The Registry</h2>
       <p class="lead rv" style="max-width:42em;margin-top:14px;color:#45454c;line-height:1.9">お渡しした個体も、掲載を終えることはありません。発行した台帳の記録は、その車が存在するかぎりここに残ります。</p>
 
       <form class="lookup rv" role="search" id="lookupForm">
@@ -1077,7 +1131,7 @@
         <li class="lot" data-no="004" data-state="transferred" data-model="常磐 TOKIWA">
           <div class="lot-media"><canvas class="scene" data-scene="model-tokiwa" aria-hidden="true"></canvas><span class="lot-no">台帳 №&thinsp;004 / 全&thinsp;33&thinsp;冊</span></div>
           <div class="lot-body">
-            <h3 class="lot-title"><span class="lot-year">1967</span><span class="lot-name">常磐 <i>Tokiwa</i></span></h3>
+            <h3 class="lot-title"><span class="lot-year">1967</span><span class="lot-name"><i>Tokiwa</i></span></h3>
             <span class="lot-chassis">TKW<i class="sep">·</i>031</span>
             <p class="lot-lede">四十八台のうち、車台も外板も一度も換えられていない三台目。</p>
             <dl class="lot-hist">
@@ -1094,7 +1148,7 @@
         <li class="lot" data-no="011" data-state="transferred" data-model="暁 AKATSUKI">
           <div class="lot-media"><canvas class="scene" data-scene="model-akatsuki" aria-hidden="true"></canvas><span class="lot-no">台帳 №&thinsp;011 / 全&thinsp;33&thinsp;冊</span></div>
           <div class="lot-body">
-            <h3 class="lot-title"><span class="lot-year">1968</span><span class="lot-name">暁 <i>Akatsuki</i></span></h3>
+            <h3 class="lot-title"><span class="lot-year">1968</span><span class="lot-name"><i>Akatsuki</i></span></h3>
             <span class="lot-chassis">AKT<i class="sep">·</i>009</span>
             <p class="lot-lede">総生産十九台、現存確認九台。そのなかで、修復痕を持たない一台。</p>
             <dl class="lot-hist">
@@ -1110,7 +1164,7 @@
         <li class="lot" data-no="019" data-state="transferred" data-model="宵 YOI">
           <div class="lot-media"><canvas class="scene" data-scene="model-yoi" aria-hidden="true"></canvas><span class="lot-no">台帳 №&thinsp;019 / 全&thinsp;33&thinsp;冊</span></div>
           <div class="lot-body">
-            <h3 class="lot-title"><span class="lot-year">1969</span><span class="lot-name">宵 <i>Yoi</i></span></h3>
+            <h3 class="lot-title"><span class="lot-year">1969</span><span class="lot-name"><i>Yoi</i></span></h3>
             <span class="lot-chassis">YOI<i class="sep">·</i>002</span>
             <p class="lot-lede">現存十台のうち、初期型として唯一残る個体。</p>
             <dl class="lot-hist">
@@ -1126,7 +1180,7 @@
         <li class="lot" data-no="031" data-state="available" data-model="常磐 TOKIWA">
           <div class="lot-media"><canvas class="scene" data-scene="story-tokiwa" aria-hidden="true"></canvas><span class="lot-no">台帳 №&thinsp;031 / 全&thinsp;33&thinsp;冊</span></div>
           <div class="lot-body">
-            <h3 class="lot-title"><span class="lot-year">1971</span><span class="lot-name">常磐 <i>Tokiwa</i></span></h3>
+            <h3 class="lot-title"><span class="lot-year">1971</span><span class="lot-name"><i>Tokiwa</i></span></h3>
             <span class="lot-chassis">TKW<i class="sep">·</i>044</span>
             <p class="lot-lede">最終年度の一台。所有の連なりに空白がありません。</p>
             <dl class="lot-hist">
@@ -1142,7 +1196,7 @@
         <li class="lot" data-no="032" data-state="available" data-model="暁 AKATSUKI">
           <div class="lot-media"><canvas class="scene" data-scene="story-akatsuki" aria-hidden="true"></canvas><span class="lot-no">台帳 №&thinsp;032 / 全&thinsp;33&thinsp;冊</span></div>
           <div class="lot-body">
-            <h3 class="lot-title"><span class="lot-year">1970</span><span class="lot-name">暁 <i>Akatsuki</i></span></h3>
+            <h3 class="lot-title"><span class="lot-year">1970</span><span class="lot-name"><i>Akatsuki</i></span></h3>
             <span class="lot-chassis">AKT<i class="sep">·</i>014</span>
             <p class="lot-lede">北信ヒルクライムの計時票が、車台番号入りで残る一台。</p>
             <dl class="lot-hist">
@@ -1158,7 +1212,7 @@
         <li class="lot" data-no="033" data-state="available" data-model="宵 YOI">
           <div class="lot-media"><canvas class="scene" data-scene="story-yoi" aria-hidden="true"></canvas><span class="lot-no">台帳 №&thinsp;033 / 全&thinsp;33&thinsp;冊</span></div>
           <div class="lot-body">
-            <h3 class="lot-title"><span class="lot-year">1972</span><span class="lot-name">宵 <i>Yoi</i></span></h3>
+            <h3 class="lot-title"><span class="lot-year">1972</span><span class="lot-name"><i>Yoi</i></span></h3>
             <span class="lot-chassis">YOI<i class="sep">·</i>004</span>
             <p class="lot-lede">最後の十一台のうち四番目。工場が閉じる二年前に生まれた個体。</p>
             <dl class="lot-hist">
@@ -1180,7 +1234,7 @@
   <!-- ================= 三つの銘 ================= -->
   <section class="range section" id="marks">
     <div class="container">
-      <h2 class="section-title centered rv">三つの銘</h2>
+      <h2 class="section-title centered rv"><span class="numeral">IV</span>The Three Marks</h2>
       <p class="range-lead rv">一九六一年から一九七四年まで、ひとつの会社が三車種だけをつくり、七十八台を残して閉じました。現存の確認と記録は、当社が引き継いでいます。</p>
       <div class="model-grid">
 
@@ -1240,7 +1294,7 @@
   <!-- ================= もっと知る ================= -->
   <section class="more section" id="more">
     <div class="container">
-      <h2 class="section-title centered rv">現存調査</h2>
+      <h2 class="section-title centered rv"><span class="numeral">V</span>The Search</h2>
     </div>
     <div class="container" style="margin-top: clamp(32px, 5vw, 56px);">
       <a class="card more-card light-media rv" style="--i:0" href="#registry" data-draw>
@@ -1264,7 +1318,7 @@
   <!-- ================= 所有者の皆さまへ ================= -->
   <section class="owners section" id="owners">
     <div class="container">
-      <h2 class="section-title rv">所有者の皆さまへ</h2>
+      <h2 class="section-title rv"><span class="numeral">VI</span>Those Who Bear It</h2>
       <p class="owners-lead rv">台帳は、お預かりしている記録ではありません。お手元の一冊が原本です。当社が保管しているのは、その写しにすぎません。ご連絡は番号をお伝えいただくだけで結構です。こちらから、それ以上はお伺いしません。</p>
       <div class="owners-grid rv">
         <div class="owners-item">
@@ -1759,9 +1813,9 @@ function renderAllScenes() {
 
   // ヒーローはモデル紹介ではなく、実際に台帳を発行した個体の紹介
   const SLIDES = [
-    { key: 'tokiwa',   eyebrow: '台帳 №004 ── 継承済 2023年', title: '1967 常磐 TOKIWA',  tint: TINT_NEUTRAL, bias: 0.50 },
-    { key: 'akatsuki', eyebrow: '台帳 №011 ── 継承済 2011年', title: '1968 暁 AKATSUKI', tint: TINT_DAWN,    bias: 0.42 },
-    { key: 'yoi',      eyebrow: '台帳 №033 ── ご案内中',       title: '1972 宵 YOI',      tint: TINT_DUSK,    bias: 0.58 },
+    { key: 'tokiwa',   eyebrow: 'Ledger No. IV \u00b7 Sealed MMXXIII',  title: '1967 TOKIWA',   tint: TINT_NEUTRAL, bias: 0.50 },
+    { key: 'akatsuki', eyebrow: 'Ledger No. XI \u00b7 Sealed MMXI',     title: '1968 AKATSUKI', tint: TINT_DAWN,    bias: 0.42 },
+    { key: 'yoi',      eyebrow: 'Ledger No. XXXIII \u00b7 Unsealed',    title: '1972 YOI',      tint: TINT_DUSK,    bias: 0.58 },
   ];
   const SLIDE_DUR = 8, BLEND_DUR = 1.6;
   let current = 0, prev = -1, blend = 1;
@@ -2177,6 +2231,95 @@ function renderAllScenes() {
   void document.body.offsetHeight;
   document.body.classList.add('is-loaded');
   window.__checkReveals();
+})();
+
+/* ============================================================
+   封蝋の印 ─ 同心円と刻線だけで組む。発光もグラデーションも使わない
+   ============================================================ */
+(() => {
+  const c = document.getElementById('sealCanvas');
+  if (!c) return;
+  function draw() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const S = c.clientWidth || 132;
+    if (!S) return;
+    c.width = S * dpr; c.height = S * dpr;
+    const x = c.getContext('2d');
+    x.setTransform(dpr, 0, 0, dpr, 0, 0);
+    x.clearRect(0, 0, S, S);
+    const cx = S / 2, cy = S / 2, R = S * 0.44;
+    const ink = (a) => `rgba(26, 27, 32, ${a})`;
+    x.lineWidth = 1;
+    x.strokeStyle = ink(0.55);
+    x.beginPath(); x.arc(cx, cy, R, 0, Math.PI * 2); x.stroke();
+    x.strokeStyle = ink(0.32);
+    x.beginPath(); x.arc(cx, cy, R * 0.86, 0, Math.PI * 2); x.stroke();
+    // 外周の刻線。十二の照合に対応する十二本
+    x.strokeStyle = ink(0.42);
+    for (let i = 0; i < 12; i++) {
+      const a = (i / 12) * Math.PI * 2 - Math.PI / 2;
+      x.beginPath();
+      x.moveTo(cx + Math.cos(a) * R * 0.88, cy + Math.sin(a) * R * 0.88);
+      x.lineTo(cx + Math.cos(a) * R * 0.98, cy + Math.sin(a) * R * 0.98);
+      x.stroke();
+    }
+    // 中央の V
+    x.strokeStyle = ink(0.72);
+    x.lineWidth = 1.6;
+    x.lineJoin = 'miter';
+    x.beginPath();
+    x.moveTo(cx - R * 0.30, cy - R * 0.30);
+    x.lineTo(cx, cy + R * 0.32);
+    x.lineTo(cx + R * 0.30, cy - R * 0.30);
+    x.stroke();
+    // 下部の年号
+    x.fillStyle = ink(0.5);
+    x.font = `500 ${Math.round(S * 0.072)}px ui-monospace, Menlo, monospace`;
+    x.textAlign = 'center';
+    x.fillText('MMXXVI', cx, cy + R * 0.72);
+  }
+  draw();
+  let t; window.addEventListener('resize', () => { clearTimeout(t); t = setTimeout(draw, 150); });
+})();
+
+/* ============================================================
+   宣言帯の背景 ─ ごく緩い一条の光だけ。文字を邪魔しない
+   ============================================================ */
+(() => {
+  const c = document.getElementById('decreeCanvas');
+  if (!c) return;
+  let W = 0, H = 0, raf = 0, t0 = 0;
+  const reduced = REDUCED.matches;
+  function size() {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = c.clientWidth; H = c.clientHeight;
+    if (!W || !H) return false;
+    const bw = Math.round(W * dpr), bh = Math.round(H * dpr);
+    if (c.width !== bw || c.height !== bh) {
+      c.width = bw; c.height = bh;
+      c.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    return true;
+  }
+  function paint(el) {
+    if (!size()) return;
+    const x = c.getContext('2d');
+    x.clearRect(0, 0, W, H);
+    const g = x.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, '#07070a'); g.addColorStop(1, '#010205');
+    x.fillStyle = g; x.fillRect(0, 0, W, H);
+    const ph = 0.5 + 0.5 * Math.sin(el * Math.PI * 2 / 34 - Math.PI / 2);
+    drawBand(x, W, H, TINT_NEUTRAL, W * (0.2 + ph * 0.6), 0.05, Math.max(80, W * 0.10), 0.34);
+    drawVignetteGrain(x, W, H, el);
+  }
+  if (reduced) { paint(8); return; }
+  function loop(now) {
+    if (!t0) t0 = now;
+    paint((now - t0) / 1000);
+    raf = requestAnimationFrame(loop);
+  }
+  raf = requestAnimationFrame(loop);
+  let rz; window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(() => paint(performance.now() / 1000), 150); });
 })();
 </script>
 </body>
