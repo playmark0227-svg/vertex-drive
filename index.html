@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>バーテックスドライブ ジャパン|公式ウェブサイト</title>
-<meta name="description" content="バーテックスドライブ公式ウェブサイト。三つの時刻 ─ 常磐・暁・宵。時間を仕立てるコーチビルド工房。">
+<meta name="description" content="バーテックスドライブ公式ウェブサイト。常磐・暁・宵。三車種を探し、検め、台帳とともに次の所有者へ渡す専門商社。">
 <meta name="theme-color" content="#010205">
 <meta name="color-scheme" content="dark light">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="VERTEX DRIVE">
 <meta property="og:title" content="バーテックスドライブ ジャパン|公式ウェブサイト">
-<meta property="og:description" content="三つの時刻 ─ 常磐・暁・宵。時間を仕立てるコーチビルド工房。">
+<meta property="og:description" content="常磐・暁・宵。三車種を探し、検め、台帳とともに次の所有者へ渡す専門商社。">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect fill='%23010205' width='64' height='64'/%3E%3Ctext x='32' y='44' font-family='Helvetica,Arial' font-size='34' font-weight='700' fill='%23fff' text-anchor='middle'%3EV%3C/text%3E%3C/svg%3E">
@@ -31,6 +31,7 @@
     --line: #d8d8db;
     --sans: "Helvetica Neue", Helvetica, Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", "Noto Sans JP", sans-serif;
     --script: "Snell Roundhand", "Savoye LET", cursive;
+    --mono: "SF Mono", "SFMono-Regular", ui-monospace, Menlo, "Courier New", monospace;
     --radius: 12px;
 
     /* モーショントークン */
@@ -665,6 +666,166 @@
   }
   .site-foot:hover .foot-mark { color: #d8d8de; }
 
+  /* ============================================================
+     社の定義文 ─ 事業の再定義をここで一度で済ませる
+     ============================================================ */
+  .house { background: var(--paper); border-bottom: 1px solid rgba(1,2,5,0.09); }
+  .house-statement {
+    max-width: 30em; font-size: clamp(19px, 2.2vw, 27px); font-weight: 500;
+    line-height: 1.85; letter-spacing: 0.02em; font-feature-settings: "palt";
+  }
+  .house-sub { max-width: 40em; margin-top: 20px; font-size: 14px; line-height: 1.95; color: #55555c; }
+
+  /* 実績の帯。数字は weight 500 ─ 700 にすると誇示に見える */
+  .record-band {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1px; background: rgba(1,2,5,0.10);
+    border-block: 1px solid rgba(1,2,5,0.10);
+    margin-top: clamp(36px, 5vw, 56px);
+  }
+  @media (max-width: 760px) { .record-band { grid-template-columns: repeat(2, 1fr); } }
+  .record-cell { background: #fff; padding: 28px 26px; }
+  .record-label { font-size: 11px; letter-spacing: 0.14em; color: #8a8a91; margin-bottom: 12px; }
+  .record-num {
+    font-size: clamp(28px, 3vw, 40px); font-weight: 500;
+    letter-spacing: -0.01em; line-height: 1.05;
+    font-variant-numeric: lining-nums tabular-nums; font-feature-settings: "palt" 0;
+  }
+  .record-unit { font-size: 14px; font-weight: 400; color: #8a8a91; margin-left: 6px; }
+  .record-sub { font-size: 11.5px; color: #8a8a91; margin-top: 10px; line-height: 1.8; }
+  .record-foot { margin-top: 18px; font-size: 12.5px; color: #78787f; line-height: 1.9; }
+
+  /* ============================================================
+     十二の照合 ─ 誇りの分母をつくる
+     ============================================================ */
+  .verify { background: linear-gradient(to bottom, #f3f4f5, #eceef0); }
+  .verify-list {
+    columns: 3; column-gap: 40px; margin-top: 34px; max-width: 60em;
+    font-variant-numeric: tabular-nums;
+  }
+  @media (max-width: 860px) { .verify-list { columns: 2; column-gap: 28px; } }
+  @media (max-width: 560px) { .verify-list { columns: 1; } }
+  .verify-list li {
+    list-style: none; break-inside: avoid;
+    display: grid; grid-template-columns: 2.4em 1fr; gap: 10px;
+    padding: 9px 0; border-bottom: 1px solid rgba(1,2,5,0.07);
+    font-size: 13.5px; line-height: 1.8;
+  }
+  .verify-list .n { color: #9a9aa0; font-size: 12px; }
+  .verify-decline {
+    margin-top: 34px; padding: 22px 26px; background: #fff;
+    border: 1px solid rgba(1,2,5,0.10); max-width: 46em;
+  }
+  .verify-decline .row { display: flex; flex-wrap: wrap; gap: 8px 32px; margin-bottom: 14px; }
+  .verify-decline .row div { display: flex; align-items: baseline; gap: 8px; }
+  .verify-decline dt { font-size: 11.5px; color: #8a8a91; letter-spacing: 0.06em; }
+  .verify-decline dd { font-size: 16px; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .verify-decline p { font-size: 13px; line-height: 1.9; color: #55555c; }
+
+  /* ============================================================
+     発行済台帳(レジストリー)─ ページの重心
+     角丸=商品、直角=書類。.card とは別系統にする
+     ============================================================ */
+  .registry { background: var(--paper); }
+  .lookup { margin: 30px 0 8px; max-width: 560px; position: relative; }
+  .lookup input {
+    width: 100%; padding: 16px 18px 16px 48px;
+    border: 1px solid #d6d7db; border-radius: 10px; background: #fff;
+    box-shadow: inset 0 1px 2px rgba(1,2,5,0.04);
+    font-family: inherit; font-size: 15px; color: var(--ink);
+    -webkit-appearance: none; appearance: none;
+    font-variant-numeric: tabular-nums;
+    transition: border-color 0.25s ease, box-shadow 0.28s ease;
+  }
+  .lookup input:hover { border-color: #b9bac0; }
+  .lookup input:focus { outline: none; border-color: #1a1b20; box-shadow: inset 0 1px 2px rgba(1,2,5,0.04), 0 0 0 4px rgba(1,2,5,0.07); }
+  .lookup input::placeholder { color: #9a9ba1; }
+  .lookup .mag { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #9a9ba1; transition: color 0.25s ease; }
+  .lookup:focus-within .mag { color: #1a1b20; }
+  .lookup-note { font-size: 12.5px; color: #78787f; line-height: 1.9; }
+
+  .reg-filter { display: flex; gap: 8px; margin: 26px 0 0; flex-wrap: wrap; }
+  .reg-filter button {
+    padding: 9px 18px; border: 1px solid rgba(1,2,5,0.16); background: transparent;
+    font-size: 12.5px; letter-spacing: 0.06em; color: #55555c;
+    transition: background-color var(--dur-micro) ease, color var(--dur-micro) ease, border-color var(--dur-micro) ease;
+  }
+  .reg-filter button:hover { border-color: rgba(1,2,5,0.4); }
+  .reg-filter button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+
+  .lot-grid {
+    display: grid; gap: 1px; background: rgba(1,2,5,0.10);
+    border-block: 1px solid rgba(1,2,5,0.10);
+    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+    margin-top: 26px; list-style: none;
+  }
+  .lot { background: #f6f7f8; padding: 0 0 26px; transition: background-color 0.4s var(--ease-out); }
+  .lot:hover { background: #fafafb; }
+  .lot[hidden] { display: none; }
+  .lot-media { position: relative; aspect-ratio: 16 / 7; background: #0e0e12; overflow: hidden; }
+  .lot-no {
+    position: absolute; right: 14px; bottom: 12px; z-index: 2;
+    font-size: 11.5px; color: rgba(255,255,255,0.6);
+    font-variant-numeric: tabular-nums; letter-spacing: 0.04em;
+  }
+  .lot-body { padding: 22px 24px 0; }
+  .lot-title { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+  .lot-year {
+    font-size: clamp(32px, 3.4vw, 44px); font-weight: 300; letter-spacing: 0.02em;
+    font-variant-numeric: lining-nums tabular-nums; font-feature-settings: "palt" 0;
+  }
+  .lot-name { font-size: 16.5px; font-weight: 600; letter-spacing: 0.04em; }
+  .lot-name i { font-family: var(--script); font-weight: 700; font-size: 19px; color: #55555c; margin-left: 3px; }
+  .lot-chassis {
+    display: inline-block; margin-bottom: 18px;
+    font: 500 14px/1 var(--mono); letter-spacing: 0.10em; color: #1a1b20;
+    background: #eceae4; border: 1px solid rgba(1,2,5,0.12); padding: 7px 12px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.8), inset 0 -1px 0 rgba(1,2,5,0.05);
+  }
+  .lot-chassis .sep { opacity: 0.35; margin: 0 2px; font-style: normal; }
+  .lot-lede { font-size: 13.5px; line-height: 1.95; margin-bottom: 20px; }
+  /* 来歴。年の列が全カードで揃うことが記録としての信用になる */
+  .lot-hist { margin-bottom: 18px; border-top: 1px solid rgba(1,2,5,0.07); }
+  .lot-hist div {
+    display: grid; grid-template-columns: 7.4em 1fr; gap: 10px;
+    line-height: 30px; border-bottom: 1px solid rgba(1,2,5,0.07);
+    font-size: 12.5px;
+  }
+  .lot-hist dt { color: #8a8a91; font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+  .lot-hist dd { color: #2b3140; }
+  .lot-hist .now dd { color: #1a1b20; font-weight: 600; }
+  .lot-kept { font-size: 12.5px; line-height: 1.9; color: #55555c; padding-left: 13px; border-left: 1px solid rgba(1,2,5,0.18); margin-bottom: 18px; }
+  .lot-kept b { font-weight: 600; color: #1a1b20; display: block; font-size: 11.5px; letter-spacing: 0.08em; margin-bottom: 3px; }
+  .lot-foot { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding-top: 14px; border-top: 1px solid rgba(1,2,5,0.10); }
+  .lot-status { font-size: 11.5px; letter-spacing: 0.10em; color: #78787f; }
+  .lot-price { font-size: 12.5px; font-weight: 500; color: #55555c; }
+  .reg-empty { margin-top: 24px; font-size: 13.5px; color: #55555c; }
+  .reg-hit { margin-top: 22px; font-size: 13.5px; color: #1a1b20; line-height: 1.9; }
+
+  /* 三つの銘 ─ 商品棚ではなく史料 */
+  .mark-stats { display: flex; gap: 8px 26px; flex-wrap: wrap; margin-bottom: 14px; }
+  .mark-stats div { display: flex; align-items: baseline; gap: 7px; }
+  .mark-stats dt { font-size: 11px; letter-spacing: 0.06em; color: rgba(255,255,255,0.55); }
+  .mark-stats dd { font-size: 15px; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+  /* 所有者の皆さまへ ─ 二人称。サイトの結び */
+  .owners { background: var(--dark-alt, #0e0e12); color: #fff; position: relative; }
+  .owners::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    background-size: 160px; opacity: 0.03; mix-blend-mode: overlay;
+  }
+  .owners .container { position: relative; }
+  .owners .section-title { color: #fff; }
+  .owners-lead { max-width: 40em; margin-top: 16px; font-size: 14.5px; line-height: 2; color: rgba(255,255,255,0.78); }
+  .owners-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: rgba(255,255,255,0.10); border-block: 1px solid rgba(255,255,255,0.10); margin-top: 40px; }
+  @media (max-width: 900px) { .owners-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .owners-grid { grid-template-columns: 1fr; } }
+  .owners-item { background: #0e0e12; padding: 24px 24px 26px; }
+  .owners-item h3 { font-size: 14px; font-weight: 600; letter-spacing: 0.03em; margin-bottom: 10px; }
+  .owners-item p { font-size: 12.5px; line-height: 1.95; color: rgba(255,255,255,0.66); }
+  .owners-close { margin-top: 34px; font-size: 12.5px; color: rgba(255,255,255,0.5); letter-spacing: 0.06em; }
+
   /* 動きを減らす設定では、リビール本体だけでなく子要素の演出も残さず止める */
   @media (prefers-reduced-motion: reduce) {
     .js .rv { opacity: 1; transform: none; transition: none; }
@@ -730,7 +891,7 @@
 </head>
 <body>
 
-<a class="skip-link" href="#stories">本文へスキップ</a>
+<a class="skip-link" href="#house">本文へスキップ</a>
 <h1 class="vh">バーテックスドライブ ジャパン 公式ウェブサイト</h1>
 
 <header class="site-head" id="siteHead">
@@ -755,14 +916,14 @@
   </button>
   <nav aria-label="サイト内メニュー">
     <div class="drawer-nav">
-      <a href="#models">モデル <span class="chev" aria-hidden="true">›</span></a>
-      <a href="#heritage">収蔵継承車 <span class="chev" aria-hidden="true">›</span></a>
-      <a href="#more">工房の世界 <span class="chev" aria-hidden="true">›</span></a>
-      <a href="#visit">来館・お問い合わせ <span class="chev" aria-hidden="true">›</span></a>
+      <a href="#registry">発行済台帳 <span class="chev" aria-hidden="true">›</span></a>
+      <a href="#marks">三つの銘 <span class="chev" aria-hidden="true">›</span></a>
+      <a href="#verify">台帳と検証 <span class="chev" aria-hidden="true">›</span></a>
+      <a href="#owners">所有者の皆さまへ <span class="chev" aria-hidden="true">›</span></a>
     </div>
     <div class="drawer-sub">
-      <a href="#stories">最新情報</a>
-      <a href="#heritage">継承プログラム</a>
+      <a href="#house">会社について</a>
+      <a href="#more">現存調査</a>
       <a href="#visit">面談のご予約</a>
     </div>
   </nav>
@@ -786,14 +947,14 @@
     </video>
     -->
     <div class="hero-copy" id="heroCopy">
-      <p class="hero-eyebrow line"><span class="line-inner" id="heroEyebrow">正午という時刻</span></p>
-      <p class="hero-title line" aria-live="polite"><span class="line-inner" id="heroTitle">常磐 TOKIWA</span></p>
-      <p class="line" style="margin:0"><span class="line-inner"><a class="cta" id="heroCta" href="#models">詳しくはこちら</a></span></p>
+      <p class="hero-eyebrow line"><span class="line-inner" id="heroEyebrow">台帳 №004 ── 継承済 2023年</span></p>
+      <p class="hero-title line" aria-live="polite"><span class="line-inner" id="heroTitle">1967 常磐 TOKIWA</span></p>
+      <p class="line" style="margin:0"><span class="line-inner"><a class="cta" id="heroCta" href="#registry">台帳を読む</a></span></p>
     </div>
     <div class="hero-progress" id="heroProgress" role="group" aria-label="モデルの切り替え">
-      <button type="button" aria-label="常磐 TOKIWA を表示" aria-current="true"><span class="fill"></span></button>
-      <button type="button" aria-label="暁 AKATSUKI を表示"><span class="fill"></span></button>
-      <button type="button" aria-label="宵 YOI を表示"><span class="fill"></span></button>
+      <button type="button" aria-label="台帳 №004 常磐 TOKIWA を表示" aria-current="true"><span class="fill"></span></button>
+      <button type="button" aria-label="台帳 №011 暁 AKATSUKI を表示"><span class="fill"></span></button>
+      <button type="button" aria-label="台帳 №033 宵 YOI を表示"><span class="fill"></span></button>
     </div>
     <a class="hero-down" href="#stories" aria-label="下へスクロール">
       <svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1 1l8 8 8-8"/></svg>
@@ -804,130 +965,274 @@
     </button>
   </section>
 
-  <!-- ================= ストーリー ================= -->
-  <section class="stories section" id="stories" aria-label="最新情報">
+  <!-- ================= 社の定義文 + 実績 ================= -->
+  <section class="house section" id="house" aria-label="会社の立場">
     <div class="container">
-      <a class="card story-card rv" style="--i:0" href="#models">
-        <canvas class="scene" data-scene="story-tokiwa" aria-hidden="true"></canvas>
-        <span class="card-label">新型 常磐、受注を開始しました</span>
+      <p class="house-statement rv">私たちは、車をつくりません。散逸した一台を探し出し、真贋と来歴を検め、台帳とともに次の所有者へ渡します。</p>
+      <p class="house-sub rv">一九六一年から一九七四年までの十三年間に、常磐・暁・宵の三車種はあわせて七十八台だけつくられました。製造した会社はもうありません。バーテックスドライブは、この七十八台を探し、検め、次の所有者へ渡すことだけを業とする会社です。</p>
+
+      <div class="record-band rv" aria-label="実績">
+        <div class="record-cell">
+          <p class="record-label">総生産</p>
+          <p class="record-num">78<span class="record-unit">台</span></p>
+          <p class="record-sub">常磐48・暁19・宵11<br>1961–1974年</p>
+        </div>
+        <div class="record-cell">
+          <p class="record-label">所在確認済</p>
+          <p class="record-num">52<span class="record-unit">台</span></p>
+          <p class="record-sub">現存が確かめられた個体<br>残る26台は探索を継続</p>
+        </div>
+        <div class="record-cell">
+          <p class="record-label">発行した台帳</p>
+          <p class="record-num">33<span class="record-unit">冊</span></p>
+          <p class="record-sub">一台につき一冊<br>仲介38件・二度以上渡った個体を含む</p>
+        </div>
+        <div class="record-cell">
+          <p class="record-label">収蔵資料</p>
+          <p class="record-num">1,410<span class="record-unit">点</span></p>
+          <p class="record-sub">設計図・部品票<br>製造元の社内文書</p>
+        </div>
+      </div>
+      <p class="record-foot rv">数値は2026年6月末時点。所在確認済の個体には、所有者のご意向により所在を公表していない9台を含みます。直近5年の成約はいずれも2億円台から4億円台ですが、個別の成約額は公表していません。</p>
+    </div>
+  </section>
+
+  <!-- ================= 台帳 ================= -->
+  <section class="stories section" id="ledger" aria-label="台帳">
+    <div class="container">
+      <h2 class="section-title rv">一台に、一冊。車とともに、次の所有者へ渡ります。</h2>
+      <p class="lead rv" style="max-width:42em;margin-top:14px;color:#45454c;line-height:1.9">台帳は、その個体について当社が確認しえた事実だけを綴じた記録簿です。推測は書きません。裏付けの取れなかった伝聞は、取れなかったと明記します。所有者が代わるたび、車とともに引き継がれます。</p>
+    </div>
+    <div class="container" style="margin-top:clamp(32px,5vw,52px)">
+      <a class="card story-card rv" style="--i:0" href="#registry">
+        <canvas class="scene" data-scene="ledger-spines" aria-hidden="true"></canvas>
+        <span class="card-label">これまでに発行した三十三冊</span>
         <span class="card-arrow" aria-hidden="true"><span class="glyph">→</span></span>
       </a>
-      <a class="card story-card rv" style="--i:1" href="#models">
-        <canvas class="scene" data-scene="story-akatsuki" aria-hidden="true"></canvas>
-        <span class="card-label">暁 ── 夜明けの試走会、春の予約受付中</span>
+      <a class="card story-card rv" style="--i:1" href="#verify">
+        <canvas class="scene" data-scene="craft-metal" aria-hidden="true"></canvas>
+        <span class="card-label">検証の章 ── 打刻・板厚・塗膜の層数</span>
         <span class="card-arrow" aria-hidden="true"><span class="glyph">→</span></span>
       </a>
-      <a class="card story-card rv" style="--i:2" href="#models">
-        <canvas class="scene" data-scene="story-yoi" aria-hidden="true"></canvas>
-        <span class="card-label">宵 ── 東京・特別展示のご案内</span>
+      <a class="card story-card rv" style="--i:2" href="#owners">
+        <canvas class="scene" data-scene="craft-leather" aria-hidden="true"></canvas>
+        <span class="card-label">整備の章 ── 入庫日、部品の出所、職人の名</span>
         <span class="card-arrow" aria-hidden="true"><span class="glyph">→</span></span>
       </a>
     </div>
   </section>
 
-  <!-- ================= モデルレンジ ================= -->
-  <section class="range section" id="models">
+  <!-- ================= 十二の照合 ================= -->
+  <section class="verify section" id="verify">
     <div class="container">
-      <h2 class="section-title centered rv">時間への旅は、ここから始まる。</h2>
-      <p class="range-lead rv">一日に三度、光は違う顔をします。正午の常磐、夜明けの暁、日暮れの宵。三台は速さでも価格でもなく、どの時刻に走るために仕立てられたかで分かれています。</p>
-      <div class="model-grid">
-
-        <a class="card model-card rv" style="--i:0" href="#heritage">
-          <canvas class="scene" data-scene="model-tokiwa" aria-hidden="true"></canvas>
-          <div class="model-logo"><span class="block">TOKIWA</span></div>
-          <div class="model-foot">
-            <div class="tag-row"><span class="tag">自然吸気・直6</span><span class="tag">年産6台</span></div>
-            <div class="model-desc-row">
-              <p class="model-desc">象徴的な2ドア・ロングノーズ・グランドツアラー。外板はすべて手叩きのアルミ。</p>
-              <span class="model-cta">エクスペリエンス <span class="glyph">→</span></span>
-            </div>
-          </div>
-        </a>
-
-        <a class="card model-card rv" style="--i:1" href="#heritage">
-          <canvas class="scene" data-scene="model-akatsuki" aria-hidden="true"></canvas>
-          <div class="model-logo"><span class="script">Akatsuki</span></div>
-          <div class="model-foot">
-            <div class="tag-row"><span class="tag">自然吸気・直4 / 940 kg</span><span class="tag">年産4台</span></div>
-            <div class="model-desc-row">
-              <p class="model-desc">屋根を持たない、針の計器だけの最軽量バルケッタ。</p>
-              <span class="model-cta">エクスペリエンス <span class="glyph">→</span></span>
-            </div>
-          </div>
-        </a>
-
-        <a class="card model-card rv" style="--i:2" href="#heritage">
-          <canvas class="scene" data-scene="model-yoi" aria-hidden="true"></canvas>
-          <div class="model-logo"><span class="script">Yoi</span></div>
-          <div class="model-foot">
-            <p class="model-note">本年度の製作枠は満了しました。収蔵継承車をご覧ください。</p>
-            <div class="tag-row"><span class="tag">自然吸気・V8 / 静粛仕様</span><span class="tag">年産2台</span></div>
-            <div class="model-desc-row">
-              <p class="model-desc">街の灯とともに走る、静かなファストバック・グランドクーペ。</p>
-              <span class="model-cta">エクスペリエンス <span class="glyph">→</span></span>
-            </div>
-          </div>
-        </a>
-
+      <h2 class="section-title rv">十二の照合と、辞退の記録。</h2>
+      <p class="lead rv" style="max-width:40em;margin-top:14px;color:#45454c;line-height:1.9">台帳を発行するかどうかは、次の十二項目がすべて揃ったときにだけ決めます。一つでも埋まらなければ、発行しません。</p>
+      <ol class="verify-list rv">
+        <li><span class="n">一</span><span>車台番号の打刻照合</span></li>
+        <li><span class="n">二</span><span>機関番号と製造元出荷記録の突合</span></li>
+        <li><span class="n">三</span><span>原設計図との寸法照合</span></li>
+        <li><span class="n">四</span><span>外板の板厚計測</span></li>
+        <li><span class="n">五</span><span>塗膜断面の層数と成分</span></li>
+        <li><span class="n">六</span><span>鋳造刻印の年号</span></li>
+        <li><span class="n">七</span><span>主要部品の品番と製造年</span></li>
+        <li><span class="n">八</span><span>初度登録原簿の取得</span></li>
+        <li><span class="n">九</span><span>所有の連なりの追跡</span></li>
+        <li><span class="n">十</span><span>通関・輸出入書類の確認</span></li>
+        <li><span class="n">十一</span><span>過去の整備記録の収集</span></li>
+        <li><span class="n">十二</span><span>距離計の読みと書類日付の整合</span></li>
+      </ol>
+      <div class="verify-decline rv">
+        <dl class="row">
+          <div><dt>本年 実見</dt><dd>214<span style="font-size:12px;color:#8a8a91;margin-left:3px">台</span></dd></div>
+          <div><dt>書類照合まで</dt><dd>41<span style="font-size:12px;color:#8a8a91;margin-left:3px">台</span></dd></div>
+          <div><dt>台帳を発行</dt><dd>7<span style="font-size:12px;color:#8a8a91;margin-left:3px">冊</span></dd></div>
+        </dl>
+        <p>発行に至らなかった34台の記録も、理由とともに当社に残しています。真贋に疑いがあったもの十一台、来歴が追えなかったもの十八台、所有者のご事情によるもの五台。辞退した記録を残さない会社は、来歴を確かめる会社ではありません。</p>
       </div>
     </div>
   </section>
 
-  <!-- ================= 収蔵継承車 ================= -->
-  <section class="heritage section" id="heritage">
+  <!-- ================= 発行済台帳(レジストリー) ================= -->
+  <section class="registry section" id="registry">
     <div class="container">
-      <h2 class="section-title rv">収蔵継承車をさがす</h2>
-      <p class="lead rv">前の所有者の時間ごと、次の手に。工房に帰館した個体を、台帳とともにお引き渡しする継承プログラムです。</p>
-      <form class="heritage-search rv" role="search" id="heritageSearch">
+      <h2 class="section-title rv">発行済台帳</h2>
+      <p class="lead rv" style="max-width:42em;margin-top:14px;color:#45454c;line-height:1.9">お渡しした個体も、掲載を終えることはありません。発行した台帳の記録は、その車が存在するかぎりここに残ります。</p>
+
+      <form class="lookup rv" role="search" id="lookupForm">
         <svg class="mag" width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true" focusable="false"><circle cx="7.5" cy="7.5" r="5.8"/><path d="M12 12l4.6 4.6"/></svg>
-        <input type="search" id="heritageQuery" name="q" placeholder="ご希望のモデル名を入力(例:常磐)"
-               aria-label="収蔵継承車をモデル名でさがす" enterkeyhint="search"
+        <input type="search" id="lookupQuery" name="no" placeholder="台帳番号を入力(例:004)"
+               aria-label="台帳番号で照会する" enterkeyhint="search"
                autocomplete="off" autocapitalize="off" spellcheck="false">
       </form>
-      <p class="note" id="heritageNote" aria-live="polite">現在の収蔵継承車は3台。ご案内は面談の後、予約制にて承ります。</p>
+      <p class="lookup-note" id="lookupNote" aria-live="polite">番号は台帳の背表紙、および助手席側の記録板に記されています。</p>
 
-      <ul class="heritage-list rv" id="heritageList">
-        <li class="heritage-item" data-name="常磐 TOKIWA">
-          <div class="hi-head">
-            <span class="hi-name">常磐 <span class="hi-en">Tokiwa</span></span>
-            <span class="hi-ledger">台帳 №&thinsp;004</span>
+      <div class="reg-filter rv" role="group" aria-label="絞り込み">
+        <button type="button" data-filter="all" aria-pressed="true">すべて</button>
+        <button type="button" data-filter="transferred" aria-pressed="false">継承済</button>
+        <button type="button" data-filter="available" aria-pressed="false">ご案内中</button>
+      </div>
+
+      <ul class="lot-grid rv" id="lotGrid">
+
+        <li class="lot" data-no="004" data-state="transferred" data-model="常磐 TOKIWA">
+          <div class="lot-media"><canvas class="scene" data-scene="model-tokiwa" aria-hidden="true"></canvas><span class="lot-no">台帳 №&thinsp;004 / 全&thinsp;33&thinsp;冊</span></div>
+          <div class="lot-body">
+            <h3 class="lot-title"><span class="lot-year">1967</span><span class="lot-name">常磐 <i>Tokiwa</i></span></h3>
+            <span class="lot-chassis">TKW<i class="sep">·</i>031</span>
+            <p class="lot-lede">四十八台のうち、車台も外板も一度も換えられていない三台目。</p>
+            <dl class="lot-hist">
+              <div><dt>1967–1974</dt><dd>初代 ── 芦屋</dd></div>
+              <div><dt>1974–1989</dt><dd>二代 ── ヴォー州</dd></div>
+              <div><dt>1991–2023</dt><dd>三代 ── 京都</dd></div>
+              <div class="now"><dt>2023–</dt><dd>四代 ── 現在の所有者のもとに</dd></div>
+            </dl>
+            <p class="lot-kept"><b>直さなかったもの</b>左フェンダー下端の打痕。1974年ミラノ、前主の日誌により由来が特定できるため修正していません。</p>
+            <div class="lot-foot"><span class="lot-status">継承済 ── 2023年</span><span class="lot-price">記名は台帳の原本にのみ</span></div>
           </div>
-          <dl class="hi-specs">
-            <div><dt>初度登録</dt><dd>2019年</dd></div>
-            <div><dt>走行</dt><dd>18,400 km</dd></div>
-            <div><dt>外装</dt><dd>漆黒(十九層)</dd></div>
-          </dl>
-          <p class="hi-note">一度の帰館整備を経て、初期の主から二代目へ。革は手の形を覚えはじめています。</p>
         </li>
-        <li class="heritage-item" data-name="暁 AKATSUKI">
-          <div class="hi-head">
-            <span class="hi-name">暁 <span class="hi-en">Akatsuki</span></span>
-            <span class="hi-ledger">台帳 №&thinsp;011</span>
+
+        <li class="lot" data-no="011" data-state="transferred" data-model="暁 AKATSUKI">
+          <div class="lot-media"><canvas class="scene" data-scene="model-akatsuki" aria-hidden="true"></canvas><span class="lot-no">台帳 №&thinsp;011 / 全&thinsp;33&thinsp;冊</span></div>
+          <div class="lot-body">
+            <h3 class="lot-title"><span class="lot-year">1968</span><span class="lot-name">暁 <i>Akatsuki</i></span></h3>
+            <span class="lot-chassis">AKT<i class="sep">·</i>009</span>
+            <p class="lot-lede">総生産十九台、現存確認九台。そのなかで、修復痕を持たない一台。</p>
+            <dl class="lot-hist">
+              <div><dt>1968–1983</dt><dd>初代 ── 東京</dd></div>
+              <div><dt>1983–2004</dt><dd>二代 ── 長野</dd></div>
+              <div class="now"><dt>2011–</dt><dd>三代 ── 現在の所有者のもとに</dd></div>
+            </dl>
+            <p class="lot-kept"><b>直さなかったもの</b>アルミ外板に残る手叩きの打痕。出荷時からの個体差で、原資料と一致します。</p>
+            <div class="lot-foot"><span class="lot-status">継承済 ── 2011年</span><span class="lot-price">記名は台帳の原本にのみ</span></div>
           </div>
-          <dl class="hi-specs">
-            <div><dt>初度登録</dt><dd>2022年</dd></div>
-            <div><dt>走行</dt><dd>6,120 km</dd></div>
-            <div><dt>外装</dt><dd>白磁</dd></div>
-          </dl>
-          <p class="hi-note">屋根のない一台。前の主は夜明けにだけ走らせ、雨の日は一度も出しませんでした。</p>
         </li>
-        <li class="heritage-item" data-name="宵 YOI">
-          <div class="hi-head">
-            <span class="hi-name">宵 <span class="hi-en">Yoi</span></span>
-            <span class="hi-ledger">台帳 №&thinsp;002</span>
+
+        <li class="lot" data-no="019" data-state="transferred" data-model="宵 YOI">
+          <div class="lot-media"><canvas class="scene" data-scene="model-yoi" aria-hidden="true"></canvas><span class="lot-no">台帳 №&thinsp;019 / 全&thinsp;33&thinsp;冊</span></div>
+          <div class="lot-body">
+            <h3 class="lot-title"><span class="lot-year">1969</span><span class="lot-name">宵 <i>Yoi</i></span></h3>
+            <span class="lot-chassis">YOI<i class="sep">·</i>002</span>
+            <p class="lot-lede">現存十台のうち、初期型として唯一残る個体。</p>
+            <dl class="lot-hist">
+              <div><dt>1969–1988</dt><dd>初代 ── 横浜</dd></div>
+              <div><dt>1988–2016</dt><dd>二代 ── ロンドン</dd></div>
+              <div class="now"><dt>2021–</dt><dd>三代 ── 現在の所有者のもとに</dd></div>
+            </dl>
+            <p class="lot-kept"><b>来歴の欠落</b>1978年から1983年までの記録が追えていません。調査を継続しています。</p>
+            <div class="lot-foot"><span class="lot-status">継承済 ── 2021年</span><span class="lot-price">記名は台帳の原本にのみ</span></div>
           </div>
-          <dl class="hi-specs">
-            <div><dt>初度登録</dt><dd>2018年</dd></div>
-            <div><dt>走行</dt><dd>41,880 km</dd></div>
-            <div><dt>外装</dt><dd>濃紺</dd></div>
-          </dl>
-          <p class="hi-note">最も走った個体。塗りは深く沈み、これから仕上がっていく一台です。</p>
         </li>
+
+        <li class="lot" data-no="031" data-state="available" data-model="常磐 TOKIWA">
+          <div class="lot-media"><canvas class="scene" data-scene="story-tokiwa" aria-hidden="true"></canvas><span class="lot-no">台帳 №&thinsp;031 / 全&thinsp;33&thinsp;冊</span></div>
+          <div class="lot-body">
+            <h3 class="lot-title"><span class="lot-year">1971</span><span class="lot-name">常磐 <i>Tokiwa</i></span></h3>
+            <span class="lot-chassis">TKW<i class="sep">·</i>044</span>
+            <p class="lot-lede">最終年度の一台。所有の連なりに空白がありません。</p>
+            <dl class="lot-hist">
+              <div><dt>1971–2004</dt><dd>初代 ── 神戸</dd></div>
+              <div><dt>2004–2025</dt><dd>二代 ── 名古屋</dd></div>
+              <div class="now"><dt>2025–</dt><dd>次の所有者を待っています</dd></div>
+            </dl>
+            <p class="lot-kept"><b>直さなかったもの</b>運転席側内張りの色差。出荷時からの個体差で、原資料と一致します。</p>
+            <div class="lot-foot"><span class="lot-status">ご案内中</span><span class="lot-price">価格は面談にて</span></div>
+          </div>
+        </li>
+
+        <li class="lot" data-no="032" data-state="available" data-model="暁 AKATSUKI">
+          <div class="lot-media"><canvas class="scene" data-scene="story-akatsuki" aria-hidden="true"></canvas><span class="lot-no">台帳 №&thinsp;032 / 全&thinsp;33&thinsp;冊</span></div>
+          <div class="lot-body">
+            <h3 class="lot-title"><span class="lot-year">1970</span><span class="lot-name">暁 <i>Akatsuki</i></span></h3>
+            <span class="lot-chassis">AKT<i class="sep">·</i>014</span>
+            <p class="lot-lede">北信ヒルクライムの計時票が、車台番号入りで残る一台。</p>
+            <dl class="lot-hist">
+              <div><dt>1970–1994</dt><dd>初代 ── 松本</dd></div>
+              <div><dt>1994–2026</dt><dd>二代 ── ミラノ</dd></div>
+              <div class="now"><dt>2026–</dt><dd>次の所有者を待っています</dd></div>
+            </dl>
+            <p class="lot-kept"><b>直さなかったもの</b>助手席側の擦過痕。1972年の走行会に由来することが当時の写真で確認できます。</p>
+            <div class="lot-foot"><span class="lot-status">ご案内中</span><span class="lot-price">価格は面談にて</span></div>
+          </div>
+        </li>
+
+        <li class="lot" data-no="033" data-state="available" data-model="宵 YOI">
+          <div class="lot-media"><canvas class="scene" data-scene="story-yoi" aria-hidden="true"></canvas><span class="lot-no">台帳 №&thinsp;033 / 全&thinsp;33&thinsp;冊</span></div>
+          <div class="lot-body">
+            <h3 class="lot-title"><span class="lot-year">1972</span><span class="lot-name">宵 <i>Yoi</i></span></h3>
+            <span class="lot-chassis">YOI<i class="sep">·</i>004</span>
+            <p class="lot-lede">最後の十一台のうち四番目。工場が閉じる二年前に生まれた個体。</p>
+            <dl class="lot-hist">
+              <div><dt>1972–1994</dt><dd>初代 ── ウィーン</dd></div>
+              <div><dt>1994–2013</dt><dd>二代 ── 東京</dd></div>
+              <div class="now"><dt>2026–</dt><dd>次の所有者を待っています</dd></div>
+            </dl>
+            <p class="lot-kept"><b>直さなかったもの</b>1979年に国内仕様へ戻した際の灯火類。取り外した欧州仕様の部品も一式が揃います。</p>
+            <div class="lot-foot"><span class="lot-status">ご案内中</span><span class="lot-price">価格は面談にて</span></div>
+          </div>
+        </li>
+
       </ul>
-      <p class="heritage-empty" id="heritageEmpty" hidden>該当する収蔵継承車はございません。入荷のご希望も面談にて承ります。</p>
+      <p class="reg-empty" id="regEmpty" hidden>該当する台帳はございません。番号をご確認のうえ、もう一度お試しください。</p>
+      <p class="lookup-note" style="margin-top:22px">記名は台帳の原本にのみ。当社は所有者のお名前を公開しません。この行が続くかぎり、車は生きています。</p>
+    </div>
+  </section>
 
-      <div class="heritage-visual rv" data-draw>
-        <canvas class="scene" data-scene="studio-three" aria-hidden="true"></canvas>
+  <!-- ================= 三つの銘 ================= -->
+  <section class="range section" id="marks">
+    <div class="container">
+      <h2 class="section-title centered rv">三つの銘</h2>
+      <p class="range-lead rv">一九六一年から一九七四年まで、ひとつの会社が三車種だけをつくり、七十八台を残して閉じました。現存の確認と記録は、当社が引き継いでいます。</p>
+      <div class="model-grid">
+
+        <a class="card model-card rv" style="--i:0" href="#registry">
+          <canvas class="scene" data-scene="model-tokiwa" aria-hidden="true"></canvas>
+          <div class="model-logo"><span class="block">TOKIWA</span></div>
+          <div class="model-foot">
+            <dl class="mark-stats">
+              <div><dt>製造</dt><dd>48</dd></div>
+              <div><dt>現存確認</dt><dd>33</dd></div>
+              <div><dt>台帳</dt><dd>19</dd></div>
+            </dl>
+            <div class="model-desc-row">
+              <p class="model-desc">1961–1971年。二ドア・ロングノーズのグランドツアラー。外板はすべて手叩きのアルミ。</p>
+              <span class="model-cta">現存記録を見る <span class="glyph">→</span></span>
+            </div>
+          </div>
+        </a>
+
+        <a class="card model-card rv" style="--i:1" href="#registry">
+          <canvas class="scene" data-scene="model-akatsuki" aria-hidden="true"></canvas>
+          <div class="model-logo"><span class="script">Akatsuki</span></div>
+          <div class="model-foot">
+            <dl class="mark-stats">
+              <div><dt>製造</dt><dd>19</dd></div>
+              <div><dt>現存確認</dt><dd>9</dd></div>
+              <div><dt>台帳</dt><dd>6</dd></div>
+            </dl>
+            <div class="model-desc-row">
+              <p class="model-desc">1968–1972年。屋根を持たない、針の計器だけの最軽量バルケッタ。</p>
+              <span class="model-cta">現存記録を見る <span class="glyph">→</span></span>
+            </div>
+          </div>
+        </a>
+
+        <a class="card model-card rv" style="--i:2" href="#registry">
+          <canvas class="scene" data-scene="model-yoi" aria-hidden="true"></canvas>
+          <div class="model-logo"><span class="script">Yoi</span></div>
+          <div class="model-foot">
+            <p class="model-note">現存十台。最も台数の少ない銘です。</p>
+            <dl class="mark-stats">
+              <div><dt>製造</dt><dd>11</dd></div>
+              <div><dt>現存確認</dt><dd>10</dd></div>
+              <div><dt>台帳</dt><dd>8</dd></div>
+            </dl>
+            <div class="model-desc-row">
+              <p class="model-desc">1969–1974年。街の灯とともに走る、静かなファストバック・グランドクーペ。</p>
+              <span class="model-cta">現存記録を見る <span class="glyph">→</span></span>
+            </div>
+          </div>
+        </a>
+
       </div>
     </div>
   </section>
@@ -935,24 +1240,51 @@
   <!-- ================= もっと知る ================= -->
   <section class="more section" id="more">
     <div class="container">
-      <h2 class="section-title centered rv">もっと知る</h2>
+      <h2 class="section-title centered rv">現存調査</h2>
     </div>
     <div class="container" style="margin-top: clamp(32px, 5vw, 56px);">
-      <a class="card more-card rv" style="--i:0" href="#visit">
-        <canvas class="scene" data-scene="craft-metal" aria-hidden="true"></canvas>
-        <span class="card-label">手仕事 ── 1,100時間の板金</span>
+      <a class="card more-card light-media rv" style="--i:0" href="#registry" data-draw>
+        <canvas class="scene" data-scene="studio-three" aria-hidden="true"></canvas>
+        <span class="card-label">所在の確認された52台</span>
         <span class="card-arrow" aria-hidden="true"><span class="glyph">→</span></span>
       </a>
       <a class="card more-card rv" style="--i:1" href="#visit">
-        <canvas class="scene" data-scene="craft-leather" aria-hidden="true"></canvas>
-        <span class="card-label">経年 ── パティナ・プログラム</span>
+        <canvas class="scene" data-scene="craft-metal" aria-hidden="true"></canvas>
+        <span class="card-label">所在未確認の26台を探しています</span>
         <span class="card-arrow" aria-hidden="true"><span class="glyph">→</span></span>
       </a>
       <a class="card more-card light-media rv" style="--i:2" href="#visit" data-draw>
         <canvas class="scene" data-scene="studio-one" aria-hidden="true"></canvas>
-        <span class="card-label">軽井沢アトリエ 来館のご予約</span>
+        <span class="card-label">資料室 ── 1,410点の設計図と社内文書</span>
         <span class="card-arrow" aria-hidden="true"><span class="glyph">→</span></span>
       </a>
+    </div>
+  </section>
+
+  <!-- ================= 所有者の皆さまへ ================= -->
+  <section class="owners section" id="owners">
+    <div class="container">
+      <h2 class="section-title rv">所有者の皆さまへ</h2>
+      <p class="owners-lead rv">台帳は、お預かりしている記録ではありません。お手元の一冊が原本です。当社が保管しているのは、その写しにすぎません。ご連絡は番号をお伝えいただくだけで結構です。こちらから、それ以上はお伺いしません。</p>
+      <div class="owners-grid rv">
+        <div class="owners-item">
+          <h3>年に一度の記録</h3>
+          <p>軽井沢にてお預かりし、計測と点検の結果を台帳に追記します。走らせない年があっても構いません。記録が途切れないことに意味があります。</p>
+        </div>
+        <div class="owners-item">
+          <h3>部品は所有者を先に</h3>
+          <p>当社は三車種の純正部品と当時の図面を収蔵しています。ご所有の個体に要る部品は、市場に出す前にお手元へお回しします。</p>
+        </div>
+        <div class="owners-item">
+          <h3>真贋の保証に期限はありません</h3>
+          <p>当社がお渡しした個体について判定の誤りが認められた場合、年数を問わず全額をお返しします。根拠は成約前に台帳で開示しています。</p>
+        </div>
+        <div class="owners-item">
+          <h3>手放すときも</h3>
+          <p>ご売却の際は、当社が買い取るか、次の所有者をお探しします。いずれの場合も、お売りになった額と次の成約額を、あなたに開示します。</p>
+        </div>
+      </div>
+      <p class="owners-close rv">台帳会 ── 年に一度、一泊。十数台。非公開。</p>
     </div>
   </section>
 
@@ -970,24 +1302,24 @@
     <div class="foot-cols">
       <div class="foot-col">
         <h3>所在地とお問い合わせ先</h3>
-        <a href="tel:0267451967">軽井沢アトリエ 0267-45-1967</a>
+        <a href="tel:0267451967">軽井沢 0267-45-1967</a>
         <a href="#visit">面談のご予約</a>
         <a href="#visit">ニュースレターを購読する</a>
       </div>
       <div class="foot-col">
-        <h3>工房情報</h3>
+        <h3>会社案内</h3>
         <a href="#top">バーテックスドライブ株式会社</a>
-        <a href="#more">台帳について</a>
-        <a href="#more">帰館整備のご案内</a>
+        <a href="#ledger">台帳について</a>
+        <a href="#verify">十二の照合</a>
         <a href="#visit">採用情報</a>
-        <a href="#stories">ニュースルーム</a>
+        <a href="#more">現存調査</a>
       </div>
       <div class="foot-col">
         <h3>公式ウェブサイト</h3>
         <a href="#top">ホームページ</a>
-        <a href="#models">三つの時刻</a>
-        <a href="#heritage">収蔵継承車をさがす</a>
-        <a href="#visit">来館案内</a>
+        <a href="#marks">三つの銘</a>
+        <a href="#registry">発行済台帳</a>
+        <a href="#owners">所有者の皆さまへ</a>
       </div>
     </div>
     <nav class="foot-social" aria-label="ソーシャルメディア">
@@ -1176,6 +1508,7 @@ const SCENES = {
   'craft-leather':  { type: 'leather', seed: 8 },
   'studio-three':   { type: 'studio', cars: ['yoi', 'akatsuki', 'tokiwa'] },
   'studio-one':     { type: 'studio', cars: ['tokiwa'] },
+  'ledger-spines':  { type: 'spines', count: 33, pulled: [30, 31, 32], seed: 91 },
 };
 const drawProgress = new Map();   // canvas → 0..1(studio の線画進捗)
 
@@ -1285,6 +1618,62 @@ function renderScene(canvas) {
     ctx.fillStyle = sheen; ctx.fillRect(0, 0, W, H);
     drawVignetteGrain(ctx, W, H);
 
+  } else if (conf.type === 'spines') {
+    // 台帳の背表紙。文章を一行も書かずに「三十三回やってきた」を語る図
+    drawDarkBg(ctx, W, H, '#17181c', '#0b0b0e');
+    const rand = rng(conf.seed);
+    const n = conf.count;
+    const gap = 3;
+    const sw = Math.max(9, Math.min(26, (W * 0.86 - gap * (n - 1)) / n));
+    const totalW = sw * n + gap * (n - 1);
+    const x0 = (W - totalW) / 2;
+    const sh = Math.min(H * 0.62, 210);
+    const baseY = H * 0.74;
+
+    for (let i = 0; i < n; i++) {
+      const pulled = conf.pulled.includes(i);
+      const x = x0 + i * (sw + gap);
+      const y = baseY - sh - (pulled ? 12 : 0);
+      // 棚の影
+      const shd = ctx.createLinearGradient(0, y + sh, 0, y + sh + 20);
+      shd.addColorStop(0, `rgba(0,0,0,${pulled ? 0.55 : 0.42})`);
+      shd.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = shd;
+      ctx.fillRect(x - 1, y + sh, sw + 2, 20);
+      // 布装丁
+      const cloth = ctx.createLinearGradient(0, y, 0, y + sh);
+      cloth.addColorStop(0, pulled ? '#22232a' : '#1a1b20');
+      cloth.addColorStop(1, pulled ? '#141519' : '#101014');
+      ctx.fillStyle = cloth;
+      ctx.fillRect(x, y, sw, sh);
+      // 上端の受光
+      ctx.fillStyle = 'rgba(255,255,255,0.10)';
+      ctx.fillRect(x, y, sw, 1);
+      // 布目
+      for (let k = 0; k < 22; k++) {
+        const ly = y + 4 + rand() * (sh - 8);
+        ctx.fillStyle = `rgba(255,255,255,${0.02 + rand() * 0.03})`;
+        ctx.fillRect(x + 1, ly, sw - 2, 0.6);
+      }
+      // 金の細線。サイト内で温色を許す唯一の場所
+      ctx.fillStyle = 'rgba(198,178,138,0.45)';
+      ctx.fillRect(x + 2, y + 14, sw - 4, 0.9);
+      ctx.fillRect(x + 2, y + sh - 15, sw - 4, 0.9);
+      // 背番号(縦組み)
+      if (sw >= 14) {
+        ctx.save();
+        ctx.fillStyle = `rgba(255,255,255,${pulled ? 0.72 : 0.5})`;
+        ctx.font = '9px ui-monospace, Menlo, monospace';
+        ctx.textAlign = 'center';
+        const label = String(i + 1).padStart(3, '0');
+        for (let c = 0; c < label.length; c++) {
+          ctx.fillText(label[c], x + sw / 2, y + sh / 2 - 10 + c * 10);
+        }
+        ctx.restore();
+      }
+    }
+    drawVignetteGrain(ctx, W, H);
+
   } else if (conf.type === 'studio') {
     const progress = drawProgress.has(canvas) ? drawProgress.get(canvas) : 1;
     const bg = ctx.createLinearGradient(0, 0, 0, H);
@@ -1368,10 +1757,11 @@ function renderAllScenes() {
   const ctx = canvas.getContext('2d');
   let W = 0, H = 0;
 
+  // ヒーローはモデル紹介ではなく、実際に台帳を発行した個体の紹介
   const SLIDES = [
-    { key: 'tokiwa',   eyebrow: 'A Museum of Hours', title: '常磐 TOKIWA',  tint: TINT_NEUTRAL, bias: 0.50 },
-    { key: 'akatsuki', eyebrow: '夜明けという時刻',   title: '暁 AKATSUKI', tint: TINT_DAWN,    bias: 0.42 },
-    { key: 'yoi',      eyebrow: '日暮れという時刻',   title: '宵 YOI',      tint: TINT_DUSK,    bias: 0.58 },
+    { key: 'tokiwa',   eyebrow: '台帳 №004 ── 継承済 2023年', title: '1967 常磐 TOKIWA',  tint: TINT_NEUTRAL, bias: 0.50 },
+    { key: 'akatsuki', eyebrow: '台帳 №011 ── 継承済 2011年', title: '1968 暁 AKATSUKI', tint: TINT_DAWN,    bias: 0.42 },
+    { key: 'yoi',      eyebrow: '台帳 №033 ── ご案内中',       title: '1972 宵 YOI',      tint: TINT_DUSK,    bias: 0.58 },
   ];
   const SLIDE_DUR = 8, BLEND_DUR = 1.6;
   let current = 0, prev = -1, blend = 1;
@@ -1512,7 +1902,7 @@ function renderAllScenes() {
   }
 
   const elCta = document.getElementById('heroCta');
-  const syncCta = () => elCta.setAttribute('aria-label', SLIDES[current].title + ' を詳しく見る');
+  const syncCta = () => elCta.setAttribute('aria-label', SLIDES[current].title + ' の台帳を読む');
 
   function updateBars() {
     bars.forEach((btn, i) => {
@@ -1744,33 +2134,43 @@ function renderAllScenes() {
   const y = document.getElementById('year');
   if (y) y.textContent = new Date().getFullYear();
 
-  // 収蔵継承車の絞り込み。読みの揺れ(かな・ローマ字)も拾う
-  const hForm = document.getElementById('heritageSearch');
-  const hQuery = document.getElementById('heritageQuery');
-  const hItems = [...document.querySelectorAll('.heritage-item')];
-  const hNote = document.getElementById('heritageNote');
-  const hEmpty = document.getElementById('heritageEmpty');
-  const ALIAS = {
-    '常磐 TOKIWA': ['常磐', 'ときわ', 'トキワ', 'tokiwa'],
-    '暁 AKATSUKI': ['暁', 'あかつき', 'アカツキ', 'akatsuki'],
-    '宵 YOI': ['宵', 'よい', 'ヨイ', 'yoi'],
-  };
-  function filterHeritage() {
-    const q = hQuery.value.trim().toLowerCase();
-    let hit = 0;
-    for (const li of hItems) {
-      const name = li.dataset.name;
-      const match = !q || (ALIAS[name] || []).some((a) => a.toLowerCase().includes(q) || q.includes(a.toLowerCase()));
-      li.hidden = !match;
-      if (match) hit++;
+  // 台帳照会と絞り込み。オーナーが自分の番号を打って、自分の一台を見つけられるようにする
+  const lookForm = document.getElementById('lookupForm');
+  const lookQ = document.getElementById('lookupQuery');
+  const lookNote = document.getElementById('lookupNote');
+  const lots = [...document.querySelectorAll('.lot')];
+  const regEmpty = document.getElementById('regEmpty');
+  const filterBtns = [...document.querySelectorAll('.reg-filter button')];
+  const DEFAULT_NOTE = '番号は台帳の背表紙、および助手席側の記録板に記されています。';
+  let mode = 'all';
+
+  function applyRegistry() {
+    const q = lookQ.value.trim().replace(/^[№#Nn]o?\.?\s*/, '');
+    let hit = 0, found = null;
+    for (const li of lots) {
+      const byNo = !q || li.dataset.no === q.padStart(3, '0') || li.dataset.no === q;
+      const byMode = mode === 'all' || li.dataset.state === mode;
+      const show = byNo && byMode;
+      li.hidden = !show;
+      if (show) { hit++; found = li; }
     }
-    hEmpty.hidden = hit > 0;
-    hNote.textContent = q
-      ? `「${hQuery.value.trim()}」に該当する収蔵継承車は${hit}台です。`
-      : '現在の収蔵継承車は3台。ご案内は面談の後、予約制にて承ります。';
+    regEmpty.hidden = hit > 0;
+    if (!q) {
+      lookNote.textContent = DEFAULT_NOTE;
+    } else if (hit === 1 && found) {
+      const state = found.dataset.state === 'transferred' ? '記録は現在も更新されています。' : '次の所有者を待っています。';
+      lookNote.textContent = `台帳 №${found.dataset.no} ── ${found.dataset.model} ── ${state}`;
+    } else {
+      lookNote.textContent = `台帳 №${q} は見つかりませんでした。番号をご確認ください。`;
+    }
   }
-  hForm.addEventListener('submit', (e) => { e.preventDefault(); filterHeritage(); });
-  hQuery.addEventListener('input', filterHeritage);
+  lookForm.addEventListener('submit', (e) => { e.preventDefault(); applyRegistry(); });
+  lookQ.addEventListener('input', applyRegistry);
+  filterBtns.forEach((btn) => btn.addEventListener('click', () => {
+    mode = btn.dataset.filter;
+    filterBtns.forEach((b) => b.setAttribute('aria-pressed', String(b === btn)));
+    applyRegistry();
+  }));
 
   // 初回ロードの振り付け開始。強制リフローで初期状態を確定させてから解除する
   // (rAFに委ねると、描画が止まっている環境で文字が隠れたままになる)
